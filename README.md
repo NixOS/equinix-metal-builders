@@ -51,3 +51,7 @@ exercise to the reader to implement server discovery. Although, if
 you're using Hydra, an importer exists at
 https://github.com/NixOS/nixos-org-configurations/tree/master/hydra-packet-importer
 already.
+
+----
+
+_btw: I don't work for Packet. Just a fan._
