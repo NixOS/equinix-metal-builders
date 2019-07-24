@@ -52,6 +52,14 @@ you're using Hydra, an importer exists at
 https://github.com/NixOS/nixos-org-configurations/tree/master/hydra-packet-importer
 already.
 
+# Implementation Notes
+
+ - A naive implementation of a remote Nix builder might stick with the
+   default unionfs. However, this approach uses a lot of extra CPU and
+   causes unstable and broken builds for more complex builds. Because
+   of this, we switched to making a full, proper filesystem across all
+   the disks present. See: https://github.com/NixOS/nixpkgs/issues/64126
+
 ----
 
 _btw: I don't work for Packet. Just a fan._
