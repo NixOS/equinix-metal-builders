@@ -7,7 +7,7 @@ let
       set -eux
       set -o pipefail
 
-      ${pkgs.utillinux}/bin/lsblk -d -e 1,7,11 -o NAME -n \
+      ${pkgs.utillinux}/bin/lsblk -d -e 1,7,11,230 -o NAME -n \
         | ${pkgs.busybox}/bin/sed -e "s#^#/dev/#" \
         | ${pkgs.busybox}/bin/xargs ${pkgs.zfs}/bin/zpool \
             create -f \
