@@ -1,5 +1,7 @@
 # Fetched from https://github.com/NixOS/nixpkgs/blob/e4837acf21f891f7f28196adcb94345dd8fec677/nixos/modules/installer/netboot/netboot.nix
-# on 2019-07-23.
+# on 2019-07-23, and originally checked in to this repository in commit
+# 1e51806 with no applied changes. git diff against that revision to
+# see what we've done.
 #------------
 # This module creates netboot media containing the given NixOS
 # configuration.
@@ -32,31 +34,22 @@ with lib;
           then []
           else [ pkgs.grub2 pkgs.syslinux ]);
 
-    fileSystems."/" =
-      { fsType = "tmpfs";
-        options = [ "mode=0755" ];
-      };
+    fileSystems."/" = {
+      fsType = "zfs";
+      device = "rpool/root";
+    };
 
-    # In stage 1, mount a tmpfs on top of /nix/store (the squashfs
-    # image) to make this a live CD.
-    fileSystems."/nix/.ro-store" =
+    fileSystems."/squash-nix-store" =
       { fsType = "squashfs";
         device = "../nix-store.squashfs";
         options = [ "loop" ];
         neededForBoot = true;
       };
 
-    fileSystems."/nix/.rw-store" =
-      { fsType = "tmpfs";
-        options = [ "mode=0755" ];
-        neededForBoot = true;
-      };
-
-    fileSystems."/nix/store" =
-      { fsType = "unionfs-fuse";
-        device = "unionfs";
-        options = [ "allow_other" "cow" "nonempty" "chroot=/mnt-root" "max_files=32768" "hide_meta_files" "dirs=/nix/.rw-store=rw:/nix/.ro-store=ro" ];
-      };
+    boot.initrd.postMountCommands = ''
+      mkdir -p $targetRoot/nix
+      cp -r $targetRoot/squash-nix-store $targetRoot/nix/store
+    '';
 
     boot.initrd.availableKernelModules = [ "squashfs" ];
 
@@ -68,7 +61,7 @@ with lib;
       [ config.system.build.toplevel ];
 
     # Create the squashfs image that contains the Nix store.
-    system.build.squashfsStore = pkgs.callPackage ../../../lib/make-squashfs.nix {
+    system.build.squashfsStore = pkgs.callPackage "${pkgs.path}/nixos/lib/make-squashfs.nix" {
       storeContents = config.netboot.storeContents;
     };
 
