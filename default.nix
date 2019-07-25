@@ -18,7 +18,7 @@ let
 in makeNetboot ({
   imports = [
     ./user.nix
-    ./hardware.nix
+    ./instances/m2.xlarge.x86.nix
     ./system.nix
     ./netboot.nix
   ];

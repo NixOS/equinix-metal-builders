@@ -23,9 +23,9 @@ When the machine shuts down, all data is lost.
    have a key which is only used by Nix's remote builder protocol,
    then they might belong in in the sshKeys list at the top.
 
-2. Edit `./hardware.nix` to match the hardware you'll be deploying to.
-   These machines are all Packet.com's m2.xlarge.x86 type, so if
-   you're also using those, it is ready to go.
+2. Edit `./instances/m2.xlarge.x86.nix` to match the hardware you'll
+   be deploying to. These machines are all Packet.com's m2.xlarge.x86
+   type, so if you're also using those, it is ready to go.
 
 # Building
 
