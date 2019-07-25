@@ -1,4 +1,4 @@
-# For a m2.xlarge.x86
+(import ../make-netboot.nix)
 {
   nixpkgs.system = "x86_64-linux";
   boot = {

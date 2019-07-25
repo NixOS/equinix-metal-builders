@@ -15,10 +15,10 @@ let
       ln -s ${build.kernel}/${kernelTarget} $out/
       ln -s ${build.netbootIpxeScript}/netboot.ipxe $out/
     '';
-in makeNetboot ({
+in machineConfig: makeNetboot ({
   imports = [
+    machineConfig
     ./user.nix
-    ./instances/m2.xlarge.x86.nix
     ./system.nix
     ./netboot.nix
   ];
