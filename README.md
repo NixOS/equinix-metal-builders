@@ -10,7 +10,7 @@ I would accept PRs parameterizing the code.
 # Principles of Operation
 
 This repository creates a bootable iPXE image. We assume each boot
-starts with an empty set of disks. In case this is not true,it erases
+starts with an empty set of disks. In case this is not true, it erases
 all of the disks and creates one large ZFS stripe across all disks. If
 you have any disks attached, it WILL erase it on every boot.
 
