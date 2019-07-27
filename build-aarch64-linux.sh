@@ -42,7 +42,7 @@ trap cleanup EXIT
 
 set -eu
 
-drv=$(realpath $(nix-instantiate ./instances/c2.large.arm.nix --show-trace --add-root ./result.drv --indirect))
+drv=$(realpath $(nix-instantiate ./instances/c2.large.arm.nix --show-trace --add-root ./result-c2.large.arm.drv --indirect))
 NIX_SSHOPTS=$SSHOPTS nix-copy-closure --use-substitutes --to "$buildHost" "$drv"
 out=$(ssh $SSHOPTS "$buildHost" NIX_REMOTE=daemon nix-store --keep-going -r "$drv" -j 5 --cores 45)
 
