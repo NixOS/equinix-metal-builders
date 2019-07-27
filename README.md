@@ -29,11 +29,40 @@ When the machine shuts down, all data is lost.
 
 # Building
 
+## m2.xlarge.x86
+
 You can simply `nix-build ./instances/m2.xlarge.x86.nix` in this
 directory and create a bootable image. On the other hand, I use
 `./build-x86-64-linux.sh`, which instantiates locally and builds on my
 netboot server. The remote server builds much faster and saves my
 battery life.
+
+## c2.large.arm
+
+In principle this one is just as easy. If you're on a machine which
+can build aarch64 binaries, then you can just run
+`nix-build ./instances/c2.large.arm.nix`. However, I am not and this
+is a bit annoying.
+
+Therefore, I've written `./build-aarch64-linux.sh` which requires a
+configuration file of this format:
+
+```
+buildHost       root@my.aarch64.builder
+pxeHost         netboot@my.netboot.server
+pxeDir          /var/lib/nginx/netboot/
+opensslServer   my.netboot.server
+opensslPort     61616
+```
+
+This will copy the derivations to `buildHost` for building, and then
+set up an openssl-wrapped netcat tunnel from `buildHost` to
+`opensslServer:opensslPort` for transfering the build products.
+
+My laptop will SSH to the `pxeHost` and launch openssl and netcat,
+then SSH to the `buildHost` and initiate a connection to
+`opensslServer:opensslPort`. If this doesn't work, make sure that
+port is open.
 
 # Deploying
 
