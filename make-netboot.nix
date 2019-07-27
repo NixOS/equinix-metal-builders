@@ -1,5 +1,6 @@
+{ buildSystem, hardware }:
 let
-  pkgs  = import <nixpkgs> { };
+  pkgs  = import <nixpkgs> { inherit buildSystem; };
   makeNetboot = config:
     let
       config_evaled = import "${pkgs.path}/nixos/lib/eval-config.nix" {
@@ -15,9 +16,9 @@ let
       ln -s ${build.kernel}/${kernelTarget} $out/
       ln -s ${build.netbootIpxeScript}/netboot.ipxe $out/
     '';
-in machineConfig: makeNetboot ({
+in makeNetboot ({
   imports = [
-    machineConfig
+    hardware
     ./user.nix
     ./system.nix
     ./netboot.nix
