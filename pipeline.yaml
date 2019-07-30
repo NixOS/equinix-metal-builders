@@ -1,0 +1,5 @@
+steps:
+  - label: x86_64-linux
+    command: ./build-x86-64-linux.sh
+  - label: aarch64-linux
+    command: ./build-aarch64-linux.sh
