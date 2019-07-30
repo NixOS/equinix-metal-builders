@@ -1,5 +1,9 @@
 steps:
   - label: x86_64-linux
     command: ./build-x86-64-linux.sh
+    env:
+      NIX_PATH: "nixpkgs=https://nixos.org/channels/nixos-19.03-small"
   - label: aarch64-linux
     command: ./build-aarch64-linux.sh
+    env:
+      NIX_PATH: "nixpkgs=https://nixos.org/channels/nixos-19.03-small"
