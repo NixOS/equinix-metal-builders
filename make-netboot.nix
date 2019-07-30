@@ -1,6 +1,6 @@
 { buildSystem, hardware }:
 let
-  pkgs  = import <nixpkgs> { inherit buildSystem; };
+  pkgs  = import <nixpkgs> { system = buildSystem; };
   makeNetboot = config:
     let
       config_evaled = import "${pkgs.path}/nixos/lib/eval-config.nix" {
