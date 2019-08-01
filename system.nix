@@ -32,5 +32,8 @@ in {
   services.openssh.enable = true;
 
   networking.hostId = "00000000";
-  nix.gc.automatic = true;
+  nix.gc = {
+    automatic = true;
+    dates = "*:0/30";
+  };
 }
