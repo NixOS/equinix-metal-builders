@@ -36,4 +36,25 @@ in {
     automatic = true;
     dates = "*:0/30";
   };
+
+  systemd.services.metadata-setup-ipv6 = {
+    wantedBy = [ "multi-user.target" ];
+    path = with pkgs; [ iproute curl jq ];
+    serviceConfig = {
+      Type = "simple";
+      Restart = "on-failure";
+      RestartSec = "5s";
+    };
+    script = ''
+      set -eux
+      set -o pipefail
+
+      defaultDevice=$(ip route get 4.2.2.2 | head -n1 | cut -d' ' -f5)
+      eval "$(curl https://metadata.packet.net/metadata \
+        | jq -r '
+          .network.addresses[]
+            | select(.address_family == 6)
+            | "ip -6 addr add " + .address + "/" + (.cidr | tostring) + " dev " + $device + "; ip -6 route replace " + .address + " dev " + $device + " proto static; ip -6 route replace default via " + .gateway + " dev " + $device + " proto static"' --arg device "$defaultDevice")"
+    '';
+  };
 }
