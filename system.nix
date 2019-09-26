@@ -38,7 +38,10 @@ in {
   };
 
   networking.firewall.allowedTCPPorts = [ 9100 ];
-  services.prometheus.exporters.node.enable = true;
+  services.prometheus.exporters.node = {
+    enable = true;
+    enabledCollectors = [ "systemd" ];
+  };
 
   systemd.services.metadata-setup-ipv6 = {
     wantedBy = [ "multi-user.target" ];
