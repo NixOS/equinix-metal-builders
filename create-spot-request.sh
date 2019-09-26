@@ -31,6 +31,8 @@ EOF
 json=$(jq -s '$extra * $json' --argjson json "$json" --argjson extra '
         {
         "ipxe_script_url": "'"$URL"'",
+        "always_pxe": true,
+        "tags": [ "hydra" ],
         "operating_system": "7516833e-1b77-4611-93e9-d48225ca8b3c"
         }
         ' < /dev/null)
