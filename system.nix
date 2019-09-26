@@ -37,6 +37,9 @@ in {
     dates = "*:0/30";
   };
 
+  networking.firewall.allowedTCPPorts = [ 9100 ];
+  services.prometheus.exporters.node.enable = true;
+
   systemd.services.metadata-setup-ipv6 = {
     wantedBy = [ "multi-user.target" ];
     path = with pkgs; [ iproute curl jq ];
