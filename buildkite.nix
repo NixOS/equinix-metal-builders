@@ -4,7 +4,7 @@ let
     command = ''
       set -eux
       cp /etc/aarch64-build-cfg ./build.cfg
-      ./build-${arch}-linux.sh ${type}
+      ./build-${arch}.sh ${type}
       ./rolling-reboot.sh ${type}
 
       echo '${builtins.toJSON (mkRebootStep type)}' > buildkite-generated.yaml
