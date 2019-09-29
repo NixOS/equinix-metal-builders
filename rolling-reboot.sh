@@ -4,9 +4,23 @@
 set -eu
 set -o pipefail
 
-#export PACKET_TOKEN=
-#export PACKET_PROJECT_ID=
 PLAN=$1
+
+cfgOpt() {
+    ret=$(awk '$1 == "'"$1"'" { print $2; }' build.cfg)
+    if [ -z "$ret" ]; then
+        echo "Config option '$1' isn't specified in build.cfg" >&2
+        echo "Example format:"
+        echo "$1        value"
+        echo ""
+        exit 1
+    fi
+
+    echo "$ret"
+}
+
+PACKET_TOKEN=$(cfgOpt "packetKey")
+PACKET_PROJECT_ID=$(cfgOpt "packetProjectId")
 
 ids_to_reboot() {
     curl \
