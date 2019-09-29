@@ -5,7 +5,6 @@ let
       set -eux
       cp /etc/aarch64-build-cfg ./build.cfg
       ./build-${arch}.sh ${type}
-      ./rolling-reboot.sh ${type}
 
       echo '${builtins.toJSON (mkRebootSteps type)}' > buildkite-generated.yaml
       buildkite-agent pipeline upload ./buildkite-generated.yaml
