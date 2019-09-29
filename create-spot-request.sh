@@ -12,12 +12,21 @@ set -o pipefail
 facilities='["ams1"]'
 
 PLAN=m2.xlarge.x86
+export URL="http://netboot.gsc.io/hydra-$PLAN/netboot.ipxe"
 
+facilities=$(curl \
+         --header 'Accept: application/json' \
+         --header 'Content-Type: application/json' \
+         --header "X-Auth-Token: $PACKET_TOKEN" \
+         --fail \
+         "https://api.packet.net/facilities" \
+         | tee /dev/stderr \
+         | jq -r '.facilities | map(.code)')
 
 json=$(cat <<EOF | jq -r .
       {
         "plan": "$PLAN",
-        "hostname": "hydra-x86",
+        "hostname": "hydra-$PLAN",
         "billing_cycle": "hourly",
         "userdata": "",
         "project_ssh_keys": [
