@@ -1,6 +1,6 @@
 steps:
   - label: m2.xlarge.x86
-    command: ./build-x86-64-linux.sh m2.xlarge.x86 && ./rolling-reboot.sh m2.xlarge.x86
+    command: ./build-x86-64-linux.sh m2.xlarge.x86
     env:
       NIX_PATH: "nixpkgs=https://nixos.org/channels/nixos-19.03-small"
       NIX_SSHOPTS: "-i /etc/aarch64-ssh-private"
@@ -8,15 +8,17 @@ steps:
       r13y: true
 
   - label: c2.large.arm
-    command: cp /etc/aarch64-build-cfg ./build.cfg && ./build-aarch64-linux.sh c2.large.arm && ./rolling-reboot.sh c2.large.arm
+    command: cp /etc/aarch64-build-cfg ./build.cfg
     env:
       NIX_PATH: "nixpkgs=https://nixos.org/channels/nixos-19.03-small"
       NIX_SSHOPTS: "-i /etc/aarch64-ssh-private"
     agents:
       r13y: true
 
+  - wait
+
   - label: c1.large.arm
-    command: cp /etc/aarch64-build-cfg ./build.cfg && ./build-aarch64-linux.sh c1.large.arm && ./rolling-reboot.sh c1.large.arm
+    command: cp /etc/aarch64-build-cfg ./build.cfg
     env:
       NIX_PATH: "nixpkgs=https://nixos.org/channels/nixos-19.03-small"
       NIX_SSHOPTS: "-i /etc/aarch64-ssh-private"
