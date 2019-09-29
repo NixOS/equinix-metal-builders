@@ -7,7 +7,7 @@ steps:
     agents:
       r13y: true
     concurrency: 1
-      concurrency_group: 'build-x86_64-linux'
+    concurrency_group: 'build-x86_64-linux'
 
   - label: c2.large.arm
     command: cp /etc/aarch64-build-cfg ./build.cfg && ./build-aarch64-linux.sh c2.large.arm && ./rolling-reboot.sh c2.large.arm
@@ -17,7 +17,7 @@ steps:
     agents:
       r13y: true
     concurrency: 1
-      concurrency_group: 'build-aarch64-linux'
+    concurrency_group: 'build-aarch64-linux'
 
   - label: c1.large.arm
     command: cp /etc/aarch64-build-cfg ./build.cfg && ./build-aarch64-linux.sh c1.large.arm && ./rolling-reboot.sh c1.large.arm
@@ -27,4 +27,4 @@ steps:
     agents:
       r13y: true
     concurrency: 1
-      concurrency_group: 'build-aarch64-linux'
+    concurrency_group: 'build-aarch64-linux'
