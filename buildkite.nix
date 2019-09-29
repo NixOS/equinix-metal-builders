@@ -7,7 +7,7 @@ let
       ./build-${arch}.sh ${type}
       ./rolling-reboot.sh ${type}
 
-      echo '${builtins.toJSON (mkRebootStep type)}' > buildkite-generated.yaml
+      echo '${builtins.toJSON (mkRebootSteps type)}' > buildkite-generated.yaml
       buildkite-agent pipeline upload ./buildkite-generated.yaml
     '';
     env = {
@@ -20,19 +20,22 @@ let
     concurrency_group = "build-${arch}-pxe";
   };
 
-  mkRebootStep = type: {
-    label = "reboot: ${type}";
-    command = ''
-      set -eux
-      cp /etc/aarch64-build-cfg ./build.cfg
-      ./rolling-reboot.sh ${type}
-    '';
-    env = {
-      NIX_PATH = "nixpkgs=https://nixos.org/channels/nixos-19.03-small";
-      NIX_SSHOPTS = "-i /etc/aarch64-ssh-private";
-    };
-
-    agents.r13y = true;
+  mkRebootSteps = type: {
+    steps = [
+      {
+        label = "reboot: ${type}";
+        command = ''
+          set -eux
+          cp /etc/aarch64-build-cfg ./build.cfg
+          ./rolling-reboot.sh ${type}
+        '';
+        env = {
+          NIX_PATH = "nixpkgs=https://nixos.org/channels/nixos-19.03-small";
+          NIX_SSHOPTS = "-i /etc/aarch64-ssh-private";
+        };
+        agents.r13y = true;
+      }
+    ];
   };
 in {
   steps = (map (mkBuildStep "x86_64-linux") [
