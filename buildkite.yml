@@ -1,6 +1,6 @@
 steps:
   - label: m2.xlarge.x86
-    command: ./build-x86-64-linux.sh m2.xlarge.x86 && ./rolling-reboot.sh c2.large.arm
+    command: cp /etc/aarch64-build-cfg ./build.cfg && ./build-x86-64-linux.sh m2.xlarge.x86 && ./rolling-reboot.sh c2.large.arm
     env:
       NIX_PATH: "nixpkgs=https://nixos.org/channels/nixos-19.03-small"
       NIX_SSHOPTS: "-i /etc/aarch64-ssh-private"
