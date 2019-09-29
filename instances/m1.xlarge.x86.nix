@@ -8,13 +8,13 @@
       kernelParams = [ "console=ttyS1,115200n8" "initrd=initrd" ];
       initrd = {
         availableKernelModules = [
-          "ahci" "xhci_pci" "mpt3sas" "nvme" "sd_mod"
+          "xhci_pci" "ehci_pci" "ahci" "megaraid_sas" "sd_mod"
         ];
       };
     };
 
     nix = {
-      maxJobs = 28;
+      maxJobs = 24;
       buildCores = 2;
       gc.options = let
         gbFree = 100;

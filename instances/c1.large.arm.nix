@@ -1,21 +1,23 @@
 (import ../make-netboot.nix)
 {
-  buildSystem = "x86_64-linux";
+  buildSystem = "aarch64-linux";
   hardware = { pkgs, ... }: {
-    nixpkgs.system = "x86_64-linux";
+    nixpkgs.system = "aarch64-linux";
     boot = {
-      kernelModules = [ "kvm-intel" ];
-      kernelParams = [ "console=ttyS1,115200n8" "initrd=initrd" ];
+      kernelParams = [
+        "cma=0M" "biosdevname=0" "net.ifnames=0" "console=ttyAMA0"
+        "initrd=initrd"
+      ];
       initrd = {
         availableKernelModules = [
-          "ahci" "xhci_pci" "mpt3sas" "nvme" "sd_mod"
+          "ahci" "pci_thunder_ecam"
         ];
       };
     };
 
     nix = {
-      maxJobs = 28;
-      buildCores = 2;
+      maxJobs = 32;
+      buildCores = 3;
       gc.options = let
         gbFree = 100;
       in ''--max-freed "$((${toString gbFree} * 1024**3 - 1024 * $(df -P -k /nix/store | tail -n 1 | ${pkgs.gawk}/bin/awk '{ print $4 }')))"'';
