@@ -33,7 +33,7 @@ When the machine shuts down, all data is lost.
 
 You can simply `nix-build ./instances/m2.xlarge.x86.nix` in this
 directory and create a bootable image. On the other hand, I use
-`./build-x86-64-linux.sh`, which instantiates locally and builds on my
+`./build-x86_64-linux.sh`, which instantiates locally and builds on my
 netboot server. The remote server builds much faster and saves my
 battery life.
 
