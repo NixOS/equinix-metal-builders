@@ -73,7 +73,7 @@ ssh $SSHOPTS "$buildHost" -- nix-shell -p openssl --run \
            | nc -N -4 ${opensslServer} ${opensslPort}'" 2>&1 \
     | sed -e 's/^/SEND /'
 
-ssh $SSHOPTS "$pxeHost" mkdir -p "${pxeDir}/${type}"
-ssh $SSHOPTS "$pxeHost" rm -rf "${pxeDir}/${type}.old"
-ssh $SSHOPTS "$pxeHost" mv "${pxeDir}/${type}" "${pxeDir}/${type}.old"
-ssh $SSHOPTS "$pxeHost" mv "${pxeDir}/${type}.next" "${pxeDir}/${type}"
+ssh $SSHOPTS "$pxeHost" mkdir -p "${pxeDir}/hydra-${type}"
+ssh $SSHOPTS "$pxeHost" rm -rf "${pxeDir}/hydra-${type}.old"
+ssh $SSHOPTS "$pxeHost" mv "${pxeDir}/hydra-${type}" "${pxeDir}/hydra-${type}.old"
+ssh $SSHOPTS "$pxeHost" mv "${pxeDir}/hydra-${type}.next" "${pxeDir}/hydra-${type}"
