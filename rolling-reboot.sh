@@ -54,13 +54,13 @@ for id in $(ids_to_reboot); do
 
     host=$(echo "$id" | cut -d- -f1 | sed -e 's/$/.packethost.net/')
     echo -n "    waiting for ${id} to go down"
-    while [ $(ssh-keyscan "$host" | wc -l) -gt 0 ] ; do
+    while [ $(ssh-keyscan "$host" 2> /dev/null | wc -l) -gt 0 ] ; do
         echo -n "."
     done
     echo " down!"
 
     echo -n "    waiting for ${id} to come back up"
-    while [ $(ssh-keyscan "$host" | wc -l) -eq 0 ] ; do
+    while [ $(ssh-keyscan "$host" 2> /dev/null  | wc -l) -eq 0 ] ; do
         echo -n "."
     done
     echo "--> UP!"
