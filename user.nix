@@ -25,7 +25,7 @@ in
   users.users = {
     root.openssh.authorizedKeys.keys = [
       (authorizedNixStoreKey sshKeys.hydra-queue-runner)
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFCgc5AZQ5KQFtszsBzbPs3qkw+A76/kRddr5Bh7tWGi" # builder
+      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDFSwa8cFdYhwMQpc3JvgU9GyYY+pOhYDngXXiKkocUcbBmS0CPDY8HuypnJLigSMrsXMVv/RD3K2AqO5DyUY5H2hMXzD8toeiiDUWru5ig9waPz8YVf1w+XNIu5d7wK9Hw5sGRF5BmKcOylNR7Jsc8ISavZjVqhqP9Mdhq0xVbICUYCHCKfmk5Tnnj440bi3Csqa1FwXNKpBqNMTn6eZLIxA7bvpib4sYhLULD1WJk2zyEMBduG2IBQ20MSqVPldLqpZp9VHTrISomPDgKnFoUoL7jwaCWuiWo4FNPVnhmxzFeyb9E3UPMVlEk0Smis8MrVfdof70QUA5LbN48wbGR" # builder
     ];
   };
 }
