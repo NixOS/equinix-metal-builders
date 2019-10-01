@@ -76,6 +76,6 @@ for id in $(ids_to_reboot); do
             echo "   ... failed!"
             exit 1
         fi
-    ) 2>&1 | sed -e 's/^/│ /'
+    ) 2>&1 | sed -e 's/^/ │ /'
     echo " └─ ok!"
 done
