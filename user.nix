@@ -25,16 +25,7 @@ in
   users.users = {
     root.openssh.authorizedKeys.keys = [
       (authorizedNixStoreKey sshKeys.hydra-queue-runner)
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFCgc5AZQ5KQFtszsBzbPs3qkw+A76/kRddr5Bh7tWGi" # builder
     ];
-
-    grahamc = {
-      isNormalUser = true;
-      extraGroups = [ "wheel" ];
-      createHome = true;
-      home = "/home/grahamc";
-      openssh.authorizedKeys.keys = [
-        "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDY8wRHQtq9uBzdiAYzpSNmF+nmIHmW+AOeBTDNmdva+CFGIBbB56q7w6GCOhfXs8edrPY4qOcQGaOD0ussIvHnqkVfw8e6CbxnpXKeAuIz7+1V72AhLPzOkif4yPrI6tSYF5nvzq6U4Yk1qFnXiLQjkA1s4EcZH6V0KbHMsu7Mtv3Irspdn8KUI3j2UwZcssFu1EuLHhLNussziRQK9tOg9ixb0U1WXuUJn7Noh9odTAsAt6jLFdr5eN/IINgC9WQqvY/W94Tc2/z5TWR7z382pEkMBR/3sf+nYKA82069tagkyrtJ/YXi00CWU4vjpnMvwPEYcmtCddfCPi8ZIUrn"
-      ];
-    };
   };
 }

@@ -43,7 +43,7 @@ ids_to_reboot() {
 }
 
 for id in $(ids_to_reboot); do
-    echo "Rebooting ${id}..."
+    echo " ═> Rebooting ${id}..."
     curl \
         --data '{"type": "reboot"}' \
         --header 'Accept: application/json' \
@@ -53,15 +53,29 @@ for id in $(ids_to_reboot); do
         "https://api.packet.net/devices/${id}/actions"
 
     host=$(echo "$id" | cut -d- -f1 | sed -e 's/$/.packethost.net/')
-    echo -n "    waiting for ${id} to go down"
+    echo -n " ├─ waiting for ${id} to go down"
     while [ $(ssh-keyscan "$host" 2> /dev/null | wc -l) -gt 0 ] ; do
         echo -n "."
     done
-    echo " down!"
+    echo ""
+    echo " │    ... down!"
 
-    echo -n "    waiting for ${id} to come back up"
+    echo -n " ├─ waiting for ${id} to come back up"
     while [ $(ssh-keyscan "$host" 2> /dev/null  | wc -l) -eq 0 ] ; do
         echo -n "."
     done
-    echo "--> UP!"
+    echo ""
+    echo " │    ... up!"
+    echo " ├─ testing remote Nix builds"
+    (
+        if ! ssh \
+            -o StrictHostKeyChecking=no \
+            -o UserKnownHostsFile=/dev/null \
+            "root@$host" \
+            "nix-build '<nixpkgs>' -A hello && nix-build '<nixpkgs>' --check -A hello"; then
+            echo "   ... failed!"
+            exit 1
+        fi
+    ) 2>&1 | sed -e 's/^/│ /'
+    echo " └─ ok!"
 done
