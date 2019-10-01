@@ -72,7 +72,7 @@ for id in $(ids_to_reboot); do
             -o StrictHostKeyChecking=no \
             -o UserKnownHostsFile=/dev/null \
             "root@$host" \
-            "nix-build '<nixpkgs>' -A hello && nix-build '<nixpkgs>' --check -A hello"; then
+            "export NIX_PATH=pkgs=https://nixos.org/channels/nixos-unstable/nixexprs.tar.xz; nix-build '<pkgs>' -A hello && nix-build '<pkgs>' --check -A hello"; then
             echo "   ... failed!"
             exit 1
         fi
