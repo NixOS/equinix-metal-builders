@@ -80,7 +80,9 @@ for id in $(ids_to_reboot); do
     up=0
     last_keyscan=$(date +%s)
     keyscans_remaining=60
-    coproc SSH (ssh "$(sos "${id}")" 2>&1 | while read -r line; do printf " │         %s  %s\n" "$(date)" "$line"; done)
+    coproc SSH (ssh -o StrictHostKeyChecking=no \
+                    -o UserKnownHostsFile=/dev/null \
+                    "$(sos "${id}")" 2>&1 | while read -r line; do printf " │         %s  %s\n" "$(date)" "$line"; done)
     while [ $up -eq 0 ]; do
         if read -t5 -r output <&"${SSH[0]}"; then
             echo "$output"
