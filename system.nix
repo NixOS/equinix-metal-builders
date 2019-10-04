@@ -66,4 +66,36 @@ in {
             | "ip -6 addr add " + .address + "/" + (.cidr | tostring) + " dev " + $device + "; ip -6 route replace " + .address + " dev " + $device + " proto static; ip -6 route replace default via " + .gateway + " dev " + $device + " proto static"' --arg device "$defaultDevice")"
     '';
   };
+
+  systemd.services.upload-ssh-key = {
+    wantedBy = [ "multi-user.target" ];
+    path = with pkgs; [ curl jq ];
+    serviceConfig = {
+      Type = "simple";
+      Restart = "on-failure";
+      RestartSec = "5s";
+    };
+    script = ''
+      set -eux
+      set -o pipefail
+
+      root_url=$(curl https://metadata.packet.net/metadata | jq -r .phone_home_url | rev | cut -d '/' -f2- | rev)
+      url="$root_url/events"
+
+
+      tell() {
+          data=$(
+          echo "{}" \
+              | jq '.state = $state | .code = ($code | tonumber) | .message = $message' \
+               --arg state "$1" \
+               --arg code "$2" \
+               --arg message "$3"
+          )
+
+          curl -v -X POST -d "$data" "$url"
+      }
+
+      tell succeeded 1001 "$(cat /etc/ssh/ssh_host_ed25519_key.pub)"
+    '';
+  };
 }
