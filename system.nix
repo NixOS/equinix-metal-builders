@@ -69,7 +69,7 @@ in {
 
   systemd.services.upload-ssh-key = {
     wantedBy = [ "multi-user.target" ];
-    path = with pkgs; [ curl jq ];
+    path = with pkgs; [ utillinux curl jq ];
     serviceConfig = {
       Type = "simple";
       Restart = "on-failure";
