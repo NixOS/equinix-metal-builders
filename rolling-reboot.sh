@@ -42,6 +42,67 @@ ids_to_reboot() {
 ' --arg plan "$PLAN"
 }
 
+drain() {
+    data=$((
+        curl \
+            --header 'Accept: application/json' \
+            --header 'Content-Type: application/json' \
+            --header "X-Auth-Token: $PACKET_TOKEN" \
+            --fail \
+            "https://api.packet.net/devices/${1}" \
+            | jq -r '.tags | .[]'
+        echo "skip-hydra"
+        # using jq -R . to convert the lines in to JSON strings,
+        # use jq -s . to convert the of JSON strings in to a JSON list
+          ) | jq -R . | jq -s '{
+          id: $id,
+          tags: .
+          }' --arg id "$1")
+
+    curl -X PATCH \
+        --data "${data}" \
+        --header 'Accept: application/json' \
+        --header 'Content-Type: application/json' \
+        --header "X-Auth-Token: $PACKET_TOKEN" \
+        --fail \
+        "https://api.packet.net/devices/${1}" \
+        | jq .
+}
+
+restore() {
+    data=$((
+        curl \
+            --header 'Accept: application/json' \
+            --header 'Content-Type: application/json' \
+            --header "X-Auth-Token: $PACKET_TOKEN" \
+            --fail \
+            "https://api.packet.net/devices/${1}" \
+            | jq -r '.tags | .[]' | grep -v '^skip-hydra$'
+        # using jq -R . to convert the lines in to JSON strings,
+        # use jq -s . to convert the of JSON strings in to a JSON list
+          ) | jq -R . | jq -s '{
+          id: $id,
+          tags: .
+          }' --arg id "$1")
+
+    curl -X PATCH \
+        --data "${data}" \
+        --header 'Accept: application/json' \
+        --header 'Content-Type: application/json' \
+        --header "X-Auth-Token: $PACKET_TOKEN" \
+        --fail \
+        "https://api.packet.net/devices/${1}" > /dev/null 2> /dev/null
+}
+
+current_jobs() {
+    curl -q \
+        --header 'Accept: application/json' \
+        --fail \
+        "https://status.nixos.org/prometheus/api/v1/query?query=hydra_machine_current_jobs\{host=%22root@${1}%22\}" \
+        | jq -r '.data.result[0].value[1]'
+}
+
+
 sos() {
     curl \
         --header 'Accept: application/json' \
@@ -65,9 +126,18 @@ reboot() {
 }
 
 for id in $(ids_to_reboot); do
-    echo " ═> Rebooting ${id}..."
-    reboot "${id}"
     host=$(echo "$id" | cut -d- -f1 | sed -e 's/$/.packethost.net/')
+
+    echo " ═>  ${id}..."
+    drain "${id}"
+    echo "Draining builds ..."
+    while [ $(current_jobs "$host") -gt 0 ]; do
+        echo -n "."
+        sleep 1
+    done
+    echo ""
+    reboot "${id}"
+
     echo -n " ├─ waiting for ${id} to go down"
     while [ $(ssh-keyscan "$host" 2> /dev/null | wc -l) -gt 0 ] ; do
         echo -n "."
@@ -118,5 +188,8 @@ for id in $(ids_to_reboot); do
             exit 1
         fi
     ) 2>&1 | sed -e 's/^/ │ /'
+    echo " ├─ Adding back to hydra"
+    restore "${id}"
+
     echo " └─ ok!"
 done
