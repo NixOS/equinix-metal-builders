@@ -82,7 +82,6 @@ in {
       root_url=$(curl https://metadata.packet.net/metadata | jq -r .phone_home_url | rev | cut -d '/' -f2- | rev)
       url="$root_url/events"
 
-
       tell() {
           data=$(
           echo "{}" \
@@ -94,6 +93,10 @@ in {
 
           curl -v -X POST -d "$data" "$url"
       }
+
+      if [ ! -f /etc/ssh/ssh_host_ed25519_key.pub ]; then
+        exit 1
+      fi
 
       tell succeeded 1001 "$(cat /etc/ssh/ssh_host_ed25519_key.pub)"
     '';
