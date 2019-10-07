@@ -127,7 +127,7 @@ reboot() {
 for id in $(ids_to_reboot); do
     host=$(echo "$id" | cut -d- -f1 | sed -e 's/$/.packethost.net/')
 
-    echo " ═>  ${id}..."
+    echo "---  ${id}..."
     drain "${id}"
     echo "Draining builds ..."
     while [ $(current_jobs "$host") -gt 0 ]; do
