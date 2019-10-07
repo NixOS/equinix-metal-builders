@@ -65,8 +65,7 @@ drain() {
         --header 'Content-Type: application/json' \
         --header "X-Auth-Token: $PACKET_TOKEN" \
         --fail \
-        "https://api.packet.net/devices/${1}" \
-        | jq .
+        "https://api.packet.net/devices/${1}" 2> /dev/null > /dev/null
 }
 
 restore() {
