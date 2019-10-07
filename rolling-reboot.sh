@@ -97,8 +97,7 @@ current_jobs() {
     curl -q \
         --header 'Accept: application/json' \
         --fail \
-        "https://status.nixos.org/prometheus/api/v1/query?query=hydra_machine_current_jobs\{host=%22root@${1}%22\}" \
-        2> /dev/null > /dev/null
+        "https://status.nixos.org/prometheus/api/v1/query?query=hydra_machine_current_jobs\{host=%22root@${1}%22\}" 2> /dev/null > /dev/null \
         | jq -r '.data.result[0].value[1]'
 }
 
