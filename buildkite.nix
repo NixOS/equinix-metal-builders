@@ -1,6 +1,6 @@
 let
   env = {
-    NIX_PATH = "nixpkgs=https://nixos.org/channels/nixos-19.09-small";
+    NIX_PATH = "nixpkgs=nixpkgs=https://nixos.org/channels/nixos-19.09-small/nixexprs.tar.xz";
     NIX_SSHOPTS = "-i /etc/aarch64-ssh-private";
   };
 
