@@ -11,6 +11,7 @@ let
         | ${pkgs.busybox}/bin/sed -e "s#^#/dev/#" \
         | ${pkgs.busybox}/bin/xargs ${pkgs.zfs}/bin/zpool \
             create -f \
+                -O sync=disabled \
                 -O mountpoint=none \
                 -O atime=off \
                 -O compression=lz4 \
