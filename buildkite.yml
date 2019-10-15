@@ -1,3 +1,3 @@
 steps:
   - label: Generate and Upload
-    command: nix-instantiate --eval --strict --json ./buildkite.nix > buildkite-generated.yaml && buildkite-agent pipeline upload ./buildkite-generated.yaml
+    command: ./buildkite.sh > buildkite-generated.yaml && buildkite-agent pipeline upload ./buildkite-generated.yaml
