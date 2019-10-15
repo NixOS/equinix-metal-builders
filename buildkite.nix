@@ -12,8 +12,10 @@ let
     NIX_SSHOPTS = "-i /etc/aarch64-ssh-private";
   };
 
+  buildId = plan: "build-${builtins.replaceStrings [ "." ] ["-"] plan}";
+
   mkBuildStep = arch: type: {
-    id = "build-${type}";
+    id = buildId type;
     label = "build: ${type}";
     command = ''
       set -eux
@@ -33,7 +35,7 @@ let
 
   mkRebootStep = device: info: {
     id = "reboot-${device.id}";
-    depends_on = "build-${info.plan}";
+    depends_on = buildId info.plan;
     label = "reboot: ${info.plan} -- ${device.facility.code} -- ${device.id}";
     command = let
       dns_target = device.short_id + ".packethost.net";
