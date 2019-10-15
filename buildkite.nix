@@ -31,22 +31,6 @@ let
     concurrency_group = "build-${arch}-pxe";
   };
 
-  mkRebootSteps = type: {
-    steps = [
-      {
-        label = "reboot: ${type}";
-        command = ''
-          set -eux
-          cp /etc/aarch64-build-cfg ./build.cfg
-          ./rolling-reboot.sh ${type}
-        '';
-
-        inherit env;
-        agents.r13y = true;
-      }
-    ];
-  };
-
   mkRebootStep = device: info: {
     id = "reboot-${device.id}";
     depends_on = "build-${info.plan}";
@@ -78,6 +62,7 @@ let
   ];
 
 in {
+  dag = true;
   steps = let
     build_steps = map
       (todo: mkBuildStep todo.platform todo.plan)
