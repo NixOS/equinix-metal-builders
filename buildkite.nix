@@ -8,7 +8,7 @@ let
   in builtins.filter is_interesting raw_data.devices;
 
   env = {
-    NIX_PATH = "nixpkgs=https://nixos.org/channels/nixos-19.09-small/nixexprs.tar.xz";
+    NIX_PATH = "nixpkgs=https://nixos.org/channels/nixos-19.09/nixexprs.tar.xz";
     NIX_SSHOPTS = "-i /etc/aarch64-ssh-private";
   };
 
@@ -20,7 +20,7 @@ let
     command = ''
       set -eux
 
-      export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-19.09-small/nixexprs.tar.xz"
+      export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-19.09/nixexprs.tar.xz"
 
       cp /etc/aarch64-build-cfg ./build.cfg
       ./build-${arch}.sh ${type}
@@ -42,7 +42,7 @@ let
     in ''
       set -eux
 
-      export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-19.09-small/nixexprs.tar.xz"
+      export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-19.09/nixexprs.tar.xz"
 
       cp /etc/aarch64-build-cfg ./build.cfg
       ./reboot.sh ${device.id} ${dns_target} ${device.id}@sos.${device.facility.code}.packet.net
