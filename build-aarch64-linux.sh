@@ -55,7 +55,7 @@ ssh $SSHOPTS "$pxeHost" rm -rf "${pxeDir}/hydra-${type}.next"
 ssh $SSHOPTS "$pxeHost" mkdir -p "${pxeDir}/hydra-${type}.next"
 
 ssh $SSHOPTS "$buildHost" -- tar -C "$out" -hvvvczf - '{Image,initrd,netboot.ipxe}' \
-    | ssh $SSHOPTS "$pxeHost" -- tar -C "${pxeDir}/${target}.next" -vvvzxf -
+    | ssh $SSHOPTS "$pxeHost" -- tar -C "${pxeDir}/hydra-${type}.next" -vvvzxf -
 
 ssh $SSHOPTS "$pxeHost" mkdir -p "${pxeDir}/hydra-${type}"
 ssh $SSHOPTS "$pxeHost" rm -rf "${pxeDir}/hydra-${type}.old"
