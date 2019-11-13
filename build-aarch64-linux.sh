@@ -53,25 +53,9 @@ psk=$(head -c 9000 /dev/urandom | md5sum | awk '{print $1}')
 
 ssh $SSHOPTS "$pxeHost" rm -rf "${pxeDir}/hydra-${type}.next"
 ssh $SSHOPTS "$pxeHost" mkdir -p "${pxeDir}/hydra-${type}.next"
-ssh $SSHOPTS "$pxeHost" -- nix-shell -p openssl --run ":"
 
-
-(ssh $SSHOPTS "$pxeHost" -- nix-shell -p openssl --run \
-    "'nc -4 -l ${opensslPort} | openssl enc -aes-256-cbc -d -k ${psk}  \
-       | tar -C ${pxeDir}/hydra-${type}.next -vvvzxf -'" 2>&1 \
-    | sed -e 's/^/RECV /')&
-
-while ! ssh $SSHOPTS "$pxeHost" -- "ss -lnt | grep '${opensslPort}'"; do
-    echo "Not listening"
-    sleep 1
-done
-sleep 1
-
-ssh $SSHOPTS "$buildHost" -- nix-shell -p openssl --run \
-    "'tar -C $out -hvvvczf - {Image,initrd,netboot.ipxe} \
-       | openssl enc -aes-256-cbc -e -k $psk \
-           | nc -N -4 ${opensslServer} ${opensslPort}'" 2>&1 \
-    | sed -e 's/^/SEND /'
+ssh $SSHOPTS "$buildHost" -- tar -C "$out" -hvvvczf - '{Image,initrd,netboot.ipxe}' \
+    | ssh $SSHOPTS "$pxeHost" -- tar -C "${pxeDir}/${target}.next" -vvvzxf -
 
 ssh $SSHOPTS "$pxeHost" mkdir -p "${pxeDir}/hydra-${type}"
 ssh $SSHOPTS "$pxeHost" rm -rf "${pxeDir}/hydra-${type}.old"
