@@ -11,18 +11,6 @@
 with lib;
 
 {
-  options = {
-
-    netboot.storeContents = mkOption {
-      example = literalExample "[ pkgs.stdenv ]";
-      description = ''
-        This option lists additional derivations to be included in the
-        Nix store in the generated netboot image.
-      '';
-    };
-
-  };
-
   config = rec {
     # Don't build the GRUB menu builder script, since we don't need it
     # here and it causes a cyclic dependency.
@@ -39,30 +27,20 @@ with lib;
       device = "rpool/root";
     };
 
-    fileSystems."/squash-nix-store" =
-      { fsType = "squashfs";
-        device = "../nix-store.squashfs";
-        options = [ "loop" ];
-        neededForBoot = true;
-      };
-
     boot.initrd.postMountCommands = ''
+      echo "Extracting initial store"
       mkdir -p $targetRoot/nix
-      cp -r $targetRoot/squash-nix-store $targetRoot/nix/store
+      xz -d -T0 < ../nix-store.tar.xz | time tar -C $targetRoot -x
     '';
 
-    boot.initrd.availableKernelModules = [ "squashfs" ];
+    boot.initrd.extraUtilsCommands = ''
+      copy_bin_and_libs ${pkgs.xz}/bin/xz
+    '';
 
-    boot.initrd.kernelModules = [ "loop" ];
-
-    # Closures to be copied to the Nix store, namely the init
-    # script and the top-level system configuration directory.
-    netboot.storeContents =
-      [ config.system.build.toplevel ];
-
-    # Create the squashfs image that contains the Nix store.
-    system.build.squashfsStore = pkgs.callPackage "${pkgs.path}/nixos/lib/make-squashfs.nix" {
-      storeContents = config.netboot.storeContents;
+    system.build.tarStore = pkgs.callPackage ./tar-store.nix {
+      # Closures to be copied to the Nix store, namely the init
+      # script and the top-level system configuration directory.
+      storeContents = [ config.system.build.toplevel ];
     };
 
 
@@ -72,8 +50,8 @@ with lib;
       prepend = [ "${config.system.build.initialRamdisk}/initrd" ];
 
       contents =
-        [ { object = config.system.build.squashfsStore;
-            symlink = "/nix-store.squashfs";
+        [ { object = config.system.build.tarStore;
+            symlink = "/nix-store.tar.xz";
           }
         ];
     };
