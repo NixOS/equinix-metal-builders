@@ -20,6 +20,7 @@ in makeNetboot ({
   imports = [
     hardware
     ./user.nix
+    ./services.nix
     ./system.nix
     ./netboot.nix
   ];
