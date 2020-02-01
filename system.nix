@@ -24,65 +24,115 @@ let
       ${pkgs.zfs}/bin/zfs create -o mountpoint=legacy rpool/root
 
     '';
-in {
-  boot.supportedFilesystems = [ "zfs" ];
-  boot.initrd.postDeviceCommands = "${post-device-cmds}";
+in
+{
+  options = {
+    packet-nix-builder.hostKeys = lib.mkOption {
+      type = lib.types.listOf (lib.types.submodule {
+        options = {
+          port = lib.mkOption {
+            description = "SSH Listening port";
+            type = lib.types.port;
+          };
 
-  hardware.enableAllFirmware = true;
+          system = lib.mkOption {
+            description = "Listening system type";
+            type = lib.types.str;
+          };
 
-  systemd.services.metadata-setup-ipv6 = {
-    wantedBy = [ "multi-user.target" ];
-    path = with pkgs; [ iproute curl jq ];
-    serviceConfig = {
-      Type = "simple";
-      Restart = "on-failure";
-      RestartSec = "5s";
+          keyFile = lib.mkOption {
+            description = "Location of host key file";
+            type = lib.types.str;
+          };
+        };
+      });
     };
-    script = ''
-      set -eux
-      set -o pipefail
-
-      defaultDevice=$(ip route get 4.2.2.2 | head -n1 | cut -d' ' -f5)
-      eval "$(curl https://metadata.packet.net/metadata \
-        | jq -r '
-          .network.addresses[]
-            | select(.address_family == 6)
-            | "ip -6 addr add " + .address + "/" + (.cidr | tostring) + " dev " + $device + "; ip -6 route replace " + .address + " dev " + $device + " proto static; ip -6 route replace default via " + .gateway + " dev " + $device + " proto static"' --arg device "$defaultDevice")"
-    '';
   };
 
-  systemd.services.upload-ssh-key = {
-    wantedBy = [ "multi-user.target" ];
-    path = with pkgs; [ utillinux curl jq ];
-    serviceConfig = {
-      Type = "simple";
-      Restart = "on-failure";
-      RestartSec = "5s";
+  config = {
+    boot.supportedFilesystems = [ "zfs" ];
+    boot.initrd.postDeviceCommands = "${post-device-cmds}";
+
+    hardware.enableAllFirmware = true;
+
+    systemd.services.metadata-setup-ipv6 = {
+      wantedBy = [ "multi-user.target" ];
+      path = with pkgs; [ iproute curl jq ];
+      serviceConfig = {
+        Type = "simple";
+        Restart = "on-failure";
+        RestartSec = "5s";
+      };
+      script = ''
+        set -eux
+        set -o pipefail
+
+        defaultDevice=$(ip route get 4.2.2.2 | head -n1 | cut -d' ' -f5)
+        eval "$(curl https://metadata.packet.net/metadata \
+          | jq -r '
+            .network.addresses[]
+              | select(.address_family == 6)
+              | "ip -6 addr add " + .address + "/" + (.cidr | tostring) + " dev " + $device + "; ip -6 route replace " + .address + " dev " + $device + " proto static; ip -6 route replace default via " + .gateway + " dev " + $device + " proto static"' --arg device "$defaultDevice")"
+      '';
     };
-    script = ''
-      set -eux
-      set -o pipefail
 
-      root_url=$(curl https://metadata.packet.net/metadata | jq -r .phone_home_url | rev | cut -d '/' -f2- | rev)
-      url="$root_url/events"
+    packet-nix-builder.hostKeys = [{
+      system = pkgs.stdenv.hostPlatform.system;
+      port = 22;
+      keyFile = "/etc/ssh/ssh_host_ed25519_key.pub";
+    }];
 
-      tell() {
+    systemd.services.upload-ssh-keys = {
+      wantedBy = [ "multi-user.target" ];
+      path = with pkgs; [ utillinux curl jq ];
+      serviceConfig = {
+        Type = "simple";
+        Restart = "on-failure";
+        RestartSec = "5s";
+      };
+      script = let
+        cfg = config.packet-nix-builder.hostKeys;
+      in ''
+        set -eux
+        set -o pipefail
+
+        root_url=$(curl https://metadata.packet.net/metadata | jq -r .phone_home_url | rev | cut -d '/' -f2- | rev)
+        url="$root_url/events"
+
+        tell() {
           data=$(
-          echo "{}" \
-              | jq '.state = $state | .code = ($code | tonumber) | .message = $message' \
-               --arg state "$1" \
-               --arg code "$2" \
-               --arg message "$3"
+            jq -n '$ARGS.named | .code |= tonumber' \
+             --arg state "$1" \
+             --arg code "$2" \
+             --arg message "$3"
           )
 
           curl -v -X POST -d "$data" "$url"
-      }
+        }
 
-      if [ ! -f /etc/ssh/ssh_host_ed25519_key.pub ]; then
-        exit 1
-      fi
+        read_host_key() {
+          if [ ! -e "$3" ]; then
+            echo "Missing key file: '$3'" >&2
+            exit 1
+          fi
 
-      tell succeeded 1001 "$(cat /etc/ssh/ssh_host_ed25519_key.pub)"
-    '';
+          jq -n '$ARGS.named | .port |= tonumber | .key |= rtrimstr("\n")' \
+            --arg system "$1" \
+            --arg port "$2" \
+            --rawfile key "$3"
+        }
+
+        message=$(
+          (
+            set -e
+            ${lib.concatMapStringsSep "\n" ({ system, port, keyFile, ... }: ''
+              read_host_key ${lib.escapeShellArgs [ system (toString port) keyFile ]}
+            '') cfg}
+          ) | jq --slurp
+        )
+
+        tell succeeded 1001 "$message"
+      '';
+    };
   };
 }
