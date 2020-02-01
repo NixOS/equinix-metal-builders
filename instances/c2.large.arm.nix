@@ -31,5 +31,7 @@
       '';
       */
     };
+
+    packet-nix-builder.armv7.enable = true;
   };
 }

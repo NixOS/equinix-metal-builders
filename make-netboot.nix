@@ -23,5 +23,7 @@ in makeNetboot ({
     ./services.nix
     ./system.nix
     ./netboot.nix
+    ./managed-vm.nix
+    ./armv7.nix
   ];
 })
