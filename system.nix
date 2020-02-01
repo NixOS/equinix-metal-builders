@@ -28,24 +28,7 @@ in {
   boot.supportedFilesystems = [ "zfs" ];
   boot.initrd.postDeviceCommands = "${post-device-cmds}";
 
-  nixpkgs.config.allowUnfree = true;
   hardware.enableAllFirmware = true;
-  services.openssh.enable = true;
-
-  networking.hostId = "00000000";
-  nix = {
-    nrBuildUsers = 100;
-    gc = {
-      automatic = true;
-      dates = "*:0/30";
-    };
-  };
-
-  networking.firewall.allowedTCPPorts = [ 9100 ];
-  services.prometheus.exporters.node = {
-    enable = true;
-    enabledCollectors = [ "systemd" ];
-  };
 
   systemd.services.metadata-setup-ipv6 = {
     wantedBy = [ "multi-user.target" ];
