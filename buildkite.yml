@@ -1,3 +1,5 @@
 steps:
   - label: Generate and Upload
     command: ./buildkite.sh > buildkite-generated.yaml && buildkite-agent pipeline upload ./buildkite-generated.yaml
+    agents:
+      aarch64: true
