@@ -14,16 +14,16 @@ let
 
   buildId = plan: "build-${builtins.replaceStrings [ "." ] ["-"] plan}";
 
-  mkBuildStep = arch: type: {
-    id = buildId type;
-    label = "build: ${type}";
+  mkBuildStep = arch: plan: {
+    id = buildId plan;
+    label = "build: ${plan}";
     command = ''
       set -eux
 
       export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-19.09/nixexprs.tar.xz"
 
       cp /etc/aarch64-build-cfg ./build.cfg
-      ./build-${arch}.sh ${type}
+      ./build-${arch}.sh ${plan}
     '';
 
     inherit env;
