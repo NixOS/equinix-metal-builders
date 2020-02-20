@@ -60,12 +60,12 @@ let
   };
 
   to_build = [
-    { platform = "x86_64-linux"; plan = "m1.xlarge.x86"; }
-    { platform = "x86_64-linux"; plan = "m2.xlarge.x86"; }
+    { platform = "x86_64-linux"; plan = "m1.xlarge.x86"; subcategory = null; }
+    { platform = "x86_64-linux"; plan = "m2.xlarge.x86"; subcategory = null; }
     { platform = "x86_64-linux"; plan = "m2.xlarge.x86"; subcategory = "big-parallel"; }
-    { platform = "x86_64-linux"; plan = "c2.medium.x86"; }
-    { platform = "aarch64-linux"; plan = "c1.large.arm"; }
-    { platform = "aarch64-linux"; plan = "c2.large.arm"; }
+    { platform = "x86_64-linux"; plan = "c2.medium.x86"; subcategory = null; }
+    { platform = "aarch64-linux"; plan = "c1.large.arm"; subcategory = null; }
+    { platform = "aarch64-linux"; plan = "c2.large.arm"; subcategory = null; }
     { platform = "aarch64-linux"; plan = "c2.large.arm"; subcategory = "big-parallel"; }
   ];
 
