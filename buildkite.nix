@@ -15,6 +15,8 @@ let
   buildId = plan: "build-${builtins.replaceStrings [ "." ] ["-"] plan}";
   sourceSlug = { plan, subcategory ? null, ... }:
     "${plan}${if subcategory == null then "" else "-${subcategory}"}";
+  toBuildUrl = { plan, subcategory ? null, ... }:
+    "http://netboot.gsc.io/hydra-${sourceSlug { inherit plan subcategory; }}/netboot.ipxe";
 
   mkBuildStep = { platform, plan, subcategory ? null }: {
     id = buildId plan;
@@ -73,7 +75,7 @@ in {
     build_steps = map mkBuildStep to_build;
 
     reboot_steps = let
-      plan_urls = map (todo: { inherit (todo) platform plan; url = "http://netboot.gsc.io/hydra-" + todo.plan + "/netboot.ipxe"; })
+      plan_urls = map (todo: { inherit (todo) platform plan; url = toBuildUrl todo; })
         to_build;
 
       arch_by_url = builtins.listToAttrs (
