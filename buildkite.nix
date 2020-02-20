@@ -13,8 +13,10 @@ let
   };
 
   buildId = plan: "build-${builtins.replaceStrings [ "." ] ["-"] plan}";
+  sourceSlug = { plan, subcategory ? null, ... }:
+    "${plan}${if subcategory == null then "" else "-${subcategory}"}";
 
-  mkBuildStep = arch: plan: {
+  mkBuildStep = { platform, plan, subcategory ? null }: {
     id = buildId plan;
     label = "build: ${plan}";
     command = ''
@@ -23,14 +25,14 @@ let
       export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-19.09/nixexprs.tar.xz"
 
       cp /etc/aarch64-build-cfg ./build.cfg
-      ./build-${arch}.sh ${plan}
+      ./build-${platform}.sh ${sourceSlug { inherit plan subcategory; }}
     '';
 
     inherit env;
 
     agents.r13y = true;
     concurrency = 1;
-    concurrency_group = "build-${arch}-pxe";
+    concurrency_group = "build-${platform}-pxe";
   };
 
   mkRebootStep = device: info: {
@@ -68,10 +70,7 @@ let
 in {
   dag = true;
   steps = let
-    build_steps = map
-      (todo: mkBuildStep todo.platform todo.plan)
-      to_build;
-
+    build_steps = map mkBuildStep to_build;
 
     reboot_steps = let
       plan_urls = map (todo: { inherit (todo) platform plan; url = "http://netboot.gsc.io/hydra-" + todo.plan + "/netboot.ipxe"; })
