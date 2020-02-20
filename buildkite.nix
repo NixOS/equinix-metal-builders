@@ -12,15 +12,15 @@ let
     NIX_SSHOPTS = "-i /etc/aarch64-ssh-private";
   };
 
-  buildId = plan: "build-${builtins.replaceStrings [ "." ] ["-"] plan}";
-  sourceSlug = { plan, subcategory ? null, ... }:
+  buildId = { plan, subcategory } @ args: "build-${builtins.replaceStrings [ "." ] ["-"] (sourceSlug args) }";
+  sourceSlug = { plan, subcategory }:
     "${plan}${if subcategory == null then "" else "-${subcategory}"}";
-  toBuildUrl = { plan, subcategory ? null, ... }:
+  toBuildUrl = { plan, subcategory, ... }:
     "http://netboot.gsc.io/hydra-${sourceSlug { inherit plan subcategory; }}/netboot.ipxe";
 
-  mkBuildStep = { platform, plan, subcategory ? null }: {
-    id = buildId plan;
-    label = "build: ${plan}";
+  mkBuildStep = { platform, plan, subcategory }: {
+    id = buildId { inherit plan subcategory; };
+    label = "build: ${sourceSlug { inherit plan subcategory; }}";
     command = ''
       set -eux
 
@@ -37,10 +37,10 @@ let
     concurrency_group = "build-${platform}-pxe";
   };
 
-  mkRebootStep = device: info: {
+  mkRebootStep = device: { plan, subcategory, ... } @ info: {
     id = "reboot-${device.id}";
-    depends_on = buildId info.plan;
-    label = "reboot: ${info.plan} -- ${device.facility.code} -- ${device.id}";
+    depends_on = buildId { inherit plan subcategory; };
+    label = "reboot: ${sourceSlug { inherit plan subcategory; }} -- ${device.facility.code} -- ${device.id}";
     command = let
       dns_target = device.short_id + ".packethost.net";
     in ''
@@ -56,7 +56,7 @@ let
 
     agents.r13y = true;
     concurrency = 2;
-    concurrency_group = "reboot-${info.plan}";
+    concurrency_group = "reboot-${sourceSlug { inherit (info) plan subcategory; } }";
   };
 
   to_build = [
@@ -75,11 +75,11 @@ in {
     build_steps = map mkBuildStep to_build;
 
     reboot_steps = let
-      plan_urls = map (todo: { inherit (todo) platform plan; url = toBuildUrl todo; })
+      plan_urls = map (todo: { inherit (todo) platform plan subcategory; url = toBuildUrl todo; })
         to_build;
 
       arch_by_url = builtins.listToAttrs (
-        map (todo: { name = todo.url; value = { inherit (todo) platform plan; }; })
+        map (todo: { name = todo.url; value = { inherit (todo) platform plan subcategory; }; })
         plan_urls
       );
 
