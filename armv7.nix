@@ -35,6 +35,7 @@ in
           ./services.nix
         ];
 
+        nixpkgs.system = "aarch64-linux";
         nixpkgs.crossSystem = { system = "armv7l-linux"; };
 
         swapDevices = [
