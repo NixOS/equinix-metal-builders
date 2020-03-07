@@ -15,19 +15,26 @@
     };
 
     specialisation = {
-      "c1.large.arm".configuration.nix = {
-        maxJobs = 32;
-        buildCores = 3;
-        makeAbout = true;
+      "c1.large.arm".configuration = {
+        favorability = 100;
+        nix = {
+          maxJobs = 32;
+          buildCores = 3;
+          makeAbout = true;
+        };
       };
 
-      "c2.large.arm".configuration.nix = {
-        maxJobs = 16;
-        buildCores = 2;
-        makeAbout = true;
+      "c2.large.arm".configuration = {
+        favorability = 70;
+        nix = {
+          maxJobs = 16;
+          buildCores = 2;
+          makeAbout = true;
+        };
       };
 
       "c2.large.arm--armv7l".configuration = {
+        favorability = 10;
         services.openssh.ports = [ 2200 ];
         packet-nix-builder.armv7.enable = true;
         nix = {
@@ -38,11 +45,14 @@
         };
       };
 
-      "c2.large.arm--big-parallel".configuration.nix = {
-        maxJobs = 2;
-        buildCores = 32;
-        makeAbout = true;
-        features = [ "big-parallel" ];
+      "c2.large.arm--big-parallel".configuration = {
+        favorability = 20;
+        nix = {
+          maxJobs = 2;
+          buildCores = 32;
+          makeAbout = true;
+          features = [ "big-parallel" ];
+        };
       };
     };
   };
