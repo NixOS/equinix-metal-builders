@@ -92,7 +92,7 @@ in
 
     systemd.services.specialise = {
       wantedBy = [ "multi-user.target" ];
-      path = with pkgs; [ utillinux curl jq ];
+      path = with pkgs; [ python3 utillinux curl jq ];
       serviceConfig = {
         Type = "simple";
         Restart = "on-failure";
@@ -114,7 +114,7 @@ in
 
         class=$(curl https://metadata.packet.net/metadata | jq -r .class)
 
-        exec ${specialise} "$class" "/run/current-system/specialisation"
+        exec python3 ${specialise} "$class" "/run/current-system/specialisation"
       '';
     };
 
