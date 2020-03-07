@@ -18,6 +18,12 @@ in
       isSystemUser = true;
     };
 
+    # Relocate host service's ports
+    services.prometheus.exporters.node.port = 9101;
+    services.openssh.ports = [ 2200 ] ;
+    # Open these ports for our VM's services
+    networking.firewall.allowedTCPPorts = [ 22 9100 ];
+
     services.managedVMs.armv7 = {
       machine = "virt,highmem=off,gic-version=3";
       cpu = "host,aarch64=off";
@@ -25,8 +31,8 @@ in
       mem = "32g";
       rootFilesystemSize = "128g";
       forwardPorts = [
-        { hostPort = 2200; vmPort = 22; protocol = "tcp"; }
-        { hostPort = 9101; vmPort = 9100; protocol = "tcp"; }
+        { hostPort = 22; vmPort = 22; protocol = "tcp"; }
+        { hostPort = 9100; vmPort = 9100; protocol = "tcp"; }
       ];
       user = "armv7-builder";
       config = { pkgs, ... }: {
@@ -81,10 +87,9 @@ in
 
     packet-nix-builder.hostKeys = [{
       system = "armv7l-linux";
-      port = 2200;
+      port = 22;
       keyFile = "/var/lib/vm-armv7/ssh/ssh_host_ed25519_key.pub";
     }];
 
-    networking.firewall.allowedTCPPorts = [ 2200 9101 ];
   };
 }

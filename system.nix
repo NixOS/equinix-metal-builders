@@ -27,6 +27,10 @@ let
 in
 {
   options = {
+    favorability = lib.mkOption {
+      type = lib.types.nullOr lib.types.int;
+      default = null;
+    };
     packet-nix-builder.hostKeys = lib.mkOption {
       type = lib.types.listOf (lib.types.submodule {
         options = {
@@ -78,9 +82,41 @@ in
 
     packet-nix-builder.hostKeys = [{
       system = pkgs.stdenv.hostPlatform.system;
-      port = 22;
+      port = builtins.head config.services.openssh.ports;
       keyFile = "/etc/ssh/ssh_host_ed25519_key.pub";
     }];
+
+    system.extraSystemBuilderCmds = if config.favorability != null then ''
+      echo ${toString config.favorability} > $out/favorability
+    '' else "";
+
+    systemd.services.specialise = {
+      wantedBy = [ "multi-user.target" ];
+      path = with pkgs; [ utillinux curl jq ];
+      serviceConfig = {
+        Type = "simple";
+        Restart = "on-failure";
+        RestartSec = "5s";
+      };
+      script = let
+        specialise = pkgs.runCommand "specialise.py" {
+          buildInputs = with pkgs; [ python3 python3Packages.mypy python3Packages.black ];
+        } ''
+          cp ${./specialise.py} ./specialise.py
+          patchShebangs ./specialise.py
+          mypy ./specialise.py
+          black --check --diff ./specialise.py
+          mv ./specialise.py $out
+        '';
+      in ''
+        set -eux
+        set -o pipefail
+
+        class=$(curl https://metadata.packet.net/metadata | jq -r .class)
+
+        exec ${specialise} "$class" "/run/current-system/specialisation"
+      '';
+    };
 
     systemd.services.upload-ssh-keys = {
       wantedBy = [ "multi-user.target" ];
@@ -122,6 +158,12 @@ in
             --rawfile key "$3"
         }
 
+        test -f /run/current-system/about.json
+        ${lib.concatMapStringsSep "\n" ({ system, port, keyFile, ... }: ''
+          test -f ${lib.escapeShellArgs [ keyFile ]}
+        '') cfg}
+
+
         message=$(
           (
             set -e
@@ -132,6 +174,7 @@ in
         )
 
         tell succeeded 1001 "$message"
+        tell succeeded 1002 "$(cat /run/current-system/about.json)"
       '';
     };
   };

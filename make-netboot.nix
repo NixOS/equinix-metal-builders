@@ -21,6 +21,8 @@ in makeNetboot ({
     hardware
     ./user.nix
     ./services.nix
+    ./specialization.nix
+    ./nix.nix
     ./system.nix
     ./netboot.nix
     ./managed-vm.nix

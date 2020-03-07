@@ -1,3 +1,4 @@
+{ config, ... }:
 {
   nixpkgs.config.allowUnfree = true;
   services.openssh.enable = true;
@@ -11,7 +12,7 @@
     };
   };
 
-  networking.firewall.allowedTCPPorts = [ 9100 ];
+  networking.firewall.allowedTCPPorts = [ config.services.prometheus.exporters.node.port ];
   services.prometheus.exporters.node = {
     enable = true;
     enabledCollectors = [ "systemd" ];

@@ -12,22 +12,22 @@ let
     NIX_SSHOPTS = "-i /etc/aarch64-ssh-private";
   };
 
-  buildId = { plan, subcategory } @ args: "build-${builtins.replaceStrings [ "." ] ["-"] (sourceSlug args) }";
-  sourceSlug = { plan, subcategory }:
-    "${plan}${if subcategory == null then "" else "-${subcategory}"}";
-  toBuildUrl = { plan, subcategory, ... }:
-    "http://netboot.gsc.io/hydra-${sourceSlug { inherit plan subcategory; }}/netboot.ipxe";
+  buildId = { platform } @ args: "build-${builtins.replaceStrings [ "." ] ["-"] (sourceSlug args) }";
+  sourceSlug = { platform }:
+    "${platform}";
+  toBuildUrl = { platform }:
+    "http://netboot.gsc.io/hydra-${sourceSlug { inherit platform; }}/netboot.ipxe";
 
-  mkBuildStep = { platform, plan, subcategory }: {
-    id = buildId { inherit plan subcategory; };
-    label = "build: ${sourceSlug { inherit plan subcategory; }}";
+  mkBuildStep = { platform }: {
+    id = buildId { inherit platform; };
+    label = "build: ${sourceSlug { inherit platform; }}";
     command = ''
       set -eux
 
       export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-19.09/nixexprs.tar.xz"
 
       cp /etc/aarch64-build-cfg ./build.cfg
-      ./build-${platform}.sh ${sourceSlug { inherit plan subcategory; }}
+      ./build-${platform}.sh ${sourceSlug { inherit platform; }}
     '';
 
     inherit env;
@@ -37,10 +37,10 @@ let
     concurrency_group = "build-${platform}-pxe";
   };
 
-  mkRebootStep = device: { plan, subcategory, ... } @ info: {
+  mkRebootStep = device: { platform, ... } @ info: {
     id = "reboot-${device.id}";
-    depends_on = buildId { inherit plan subcategory; };
-    label = "reboot: ${sourceSlug { inherit plan subcategory; }} -- ${device.facility.code} -- ${device.id}";
+    depends_on = buildId { inherit platform; };
+    label = "reboot: ${sourceSlug { inherit platform; }} -- ${device.plan.slug} -- ${device.facility.code} -- ${device.id}";
     command = let
       dns_target = device.short_id + ".packethost.net";
     in ''
@@ -56,17 +56,12 @@ let
 
     agents.r13y = true;
     concurrency = 2;
-    concurrency_group = "reboot-${sourceSlug { inherit (info) plan subcategory; } }";
+    concurrency_group = "reboot-${sourceSlug { inherit platform; } }";
   };
 
   to_build = [
-    { platform = "x86_64-linux"; plan = "m1.xlarge.x86"; subcategory = null; }
-    { platform = "x86_64-linux"; plan = "m2.xlarge.x86"; subcategory = null; }
-    { platform = "x86_64-linux"; plan = "m2.xlarge.x86"; subcategory = "big-parallel"; }
-    { platform = "x86_64-linux"; plan = "c2.medium.x86"; subcategory = null; }
-    { platform = "aarch64-linux"; plan = "c1.large.arm"; subcategory = null; }
-    { platform = "aarch64-linux"; plan = "c2.large.arm"; subcategory = null; }
-    { platform = "aarch64-linux"; plan = "c2.large.arm"; subcategory = "big-parallel"; }
+    { platform = "x86_64-linux"; }
+    { platform = "aarch64-linux"; }
   ];
 
 in {
@@ -75,11 +70,11 @@ in {
     build_steps = map mkBuildStep to_build;
 
     reboot_steps = let
-      plan_urls = map (todo: { inherit (todo) platform plan subcategory; url = toBuildUrl todo; })
+      plan_urls = map (todo: { inherit (todo) platform; url = toBuildUrl todo; })
         to_build;
 
       arch_by_url = builtins.listToAttrs (
-        map (todo: { name = todo.url; value = { inherit (todo) platform plan subcategory; }; })
+        map (todo: { name = todo.url; value = { inherit (todo) platform; }; })
         plan_urls
       );
 
