@@ -123,11 +123,6 @@ let
         default = null;
       };
 
-      user = mkOption {
-        type = types.str;
-        description = "User to run qemu";
-      };
-
       rootFilesystemSize = mkOption {
         description = "Size of root filesystem, allocated with qemu-img";
         type = types.str;
@@ -226,7 +221,6 @@ in
           '';
 
           serviceConfig = {
-            User = cfg.user;
             StateDirectory = "vm-%i";
             Type = "simple";
             PrivateTmp = true;

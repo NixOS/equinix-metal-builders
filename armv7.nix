@@ -36,6 +36,8 @@ in
           ./nix.nix
         ];
 
+        nix.gbFree = 60;
+
         nixpkgs.system = "aarch64-linux";
         nixpkgs.crossSystem = { system = "armv7l-linux"; };
 
