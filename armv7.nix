@@ -33,6 +33,7 @@ in
         imports = [
           ./user.nix
           ./services.nix
+          ./nix.nix
         ];
 
         nixpkgs.system = "aarch64-linux";
