@@ -14,13 +14,8 @@ in
   };
 
   config = mkIf cfg.enable {
-    users.users.armv7-builder = {
-      isSystemUser = true;
-    };
-
-    # Relocate host service's ports
-    services.prometheus.exporters.node.port = 9101;
-    services.openssh.ports = [ 2200 ] ;
+    services.prometheus.exporters.node.port = lib.mkForce 9101;
+    services.openssh.ports = lib.mkForce [ 2200 ] ;
     # Open these ports for our VM's services
     networking.firewall.allowedTCPPorts = [ 22 9100 ];
 
@@ -34,7 +29,6 @@ in
         { hostPort = 22; vmPort = 22; protocol = "tcp"; }
         { hostPort = 9100; vmPort = 9100; protocol = "tcp"; }
       ];
-      user = "armv7-builder";
       config = { pkgs, ... }: {
         imports = [
           ./user.nix

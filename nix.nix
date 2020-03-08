@@ -17,7 +17,7 @@ in {
       };
 
       makeAbout = mkEnableOption {
-
+        type = types.bool;
       };
 
       systemTypes = mkOption {
