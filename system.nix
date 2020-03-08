@@ -163,6 +163,7 @@ in
         test -f /run/current-system/about.json
         ${lib.concatMapStringsSep "\n" ({ system, port, keyFile, ... }: ''
           test -f ${lib.escapeShellArgs [ keyFile ]}
+          test "x$(cat ${lib.escapeShellArgs [ keyFile ]})" != "x"
         '') cfg}
 
 
