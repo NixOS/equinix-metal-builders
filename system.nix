@@ -60,6 +60,7 @@ in
     hardware.enableAllFirmware = true;
 
     systemd.services.metadata-setup-ipv6 = {
+      enable = ! config.nix.makeAbout;
       wantedBy = [ "multi-user.target" ];
       path = with pkgs; [ iproute curl jq ];
       serviceConfig = {
@@ -91,6 +92,7 @@ in
     '' else "";
 
     systemd.services.specialise = {
+      enable = ! config.nix.makeAbout;
       wantedBy = [ "multi-user.target" ];
       path = with pkgs; [ python3 utillinux curl jq ];
       serviceConfig = {
