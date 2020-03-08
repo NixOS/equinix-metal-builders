@@ -8,7 +8,8 @@ from typing import List, Dict, Tuple, Optional
 from random import randint
 
 iama: str = sys.argv[1]
-options_dir: str = sys.argv[2]
+name: str = sys.argv[2]
+options_dir: str = sys.argv[3]
 
 
 os.chdir(options_dir)
@@ -17,11 +18,16 @@ options: List[str] = glob("*")
 viable_options: List[str] = [option for option in options if iama in option]
 
 print(f"I am a: {iama}")
+print(f"My name is: {name}")
 print("all options:")
 pprint(options)
 
 print("viable options:")
 pprint(viable_options)
+
+if name in viable_options:
+    print("my name is a viable option, forcing that.")
+    viable_options = [name]
 
 if len(viable_options) == 0:
     print("none! aborting!")
