@@ -26,8 +26,8 @@ in
       mem = "32g";
       rootFilesystemSize = "128g";
       forwardPorts = [
-        { hostPort = 22; vmPort = 22; protocol = "tcp"; }
-        { hostPort = 9100; vmPort = 9100; protocol = "tcp"; }
+        { hostPort = 22; vmPort = 27; protocol = "tcp"; }
+        { hostPort = 9100; vmPort = 9105; protocol = "tcp"; }
       ];
       config = { pkgs, ... }: {
         imports = [
