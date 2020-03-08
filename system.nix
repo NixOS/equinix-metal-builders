@@ -100,6 +100,13 @@ in
         Restart = "on-failure";
         RestartSec = "5s";
       };
+      unitConfig = {
+        X-ReloadIfChanged = false;
+        X-RestartIfChanged = false;
+        X-StopIfChanged = false;
+        X-StopOnReconfiguration = false;
+        X-StopOnRemoval = false;
+      };
       script = let
         specialise = pkgs.runCommand "specialise.py" {
           buildInputs = with pkgs; [ python3 python3Packages.mypy python3Packages.black ];
@@ -127,6 +134,13 @@ in
         Type = "simple";
         Restart = "on-failure";
         RestartSec = "5s";
+      };
+      unitConfig = {
+        X-ReloadIfChanged = false;
+        X-RestartIfChanged = false;
+        X-StopIfChanged = false;
+        X-StopOnReconfiguration = false;
+        X-StopOnRemoval = false;
       };
       script = let
         cfg = config.packet-nix-builder.hostKeys;
