@@ -54,6 +54,12 @@ in
   };
 
   config = {
+    programs.command-not-found.enable = false;
+    security.polkit.enable = false;
+    services.udisks2.enable = false;
+    documentation.enable = false;
+    environment.noXlibs = true;
+
     boot.supportedFilesystems = [ "zfs" ];
     boot.initrd.postDeviceCommands = "${post-device-cmds}";
 
