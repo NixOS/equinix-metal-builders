@@ -17,21 +17,16 @@ options: List[str] = glob("*")
 
 viable_options: List[str] = [option for option in options if iama in option]
 
-print(f"I am a: {iama}")
-print(f"My name is: {name}")
-print("all options:")
+print(f"I am: {iama}; name: {name}")
+print("possible:")
 pprint(options)
 
-print("viable options:")
+print("viable:")
 pprint(viable_options)
 
 if name in viable_options:
-    print("my name is a viable option, forcing that.")
+    print("my name is an option, forcing.")
     viable_options = [name]
-
-if len(viable_options) == 0:
-    print("none! aborting!")
-    sys.exit(1)
 
 if len(viable_options) == 0:
     print("none! aborting!")
@@ -55,7 +50,7 @@ for option, favorability in option_favorability.items():
     last_max = favorability + last_max
     option_ranges.append((option, last_max))
 
-print("Assigned options with max ranges:")
+print("Assigned options w/ max range:")
 pprint(option_ranges)
 
 picked: int = randint(0, last_max)
@@ -68,7 +63,7 @@ for option_range in option_ranges:
         break
 
 if selected is not None:
+    program = f"{selected}/bin/switch-to-configuration"
     os.execv(
-        f"{selected}/bin/switch-to-configuration",
-        [f"{selected}/bin/switch-to-configuration", "switch"],
+        program, [program, "switch"],
     )
