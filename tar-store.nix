@@ -21,6 +21,6 @@ stdenv.mkDerivation {
         nix/store/nix-path-registration \
         -C / \
         $(cat $closureInfo/store-paths) \
-        | xz -8 -T0 > $out
+        | xz -T0 > $out
     '';
 }
