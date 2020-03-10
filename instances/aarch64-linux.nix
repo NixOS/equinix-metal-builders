@@ -38,7 +38,7 @@
         services.openssh.ports = [ 2200 ];
         packet-nix-builder.armv7.enable = true;
         nix = {
-          maxJobs = 10;
+          maxJobs = 5;
           buildCores = 2;
           makeAbout = true;
           systemTypes = lib.mkForce [ "armv7l-linux" ];
