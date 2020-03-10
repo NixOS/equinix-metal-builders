@@ -23,7 +23,7 @@ in
       machine = "virt,highmem=off,gic-version=3";
       cpu = "host,aarch64=off";
       smp = 16;
-      mem = "32g";
+      mem = "100g";
       rootFilesystemSize = "128g";
       forwardPorts = [
         { hostPort = 22; vmPort = 27; protocol = "tcp"; }
