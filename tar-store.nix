@@ -17,7 +17,10 @@ stdenv.mkDerivation {
       cp $closureInfo/registration nix/store/nix-path-registration
 
       # Generate the tarball.
-      tar -c \
+      tar \
+        --sort=name \
+        --owner=0 --group=0 --numeric-owner \
+        -c \
         nix/store/nix-path-registration \
         -C / \
         $(cat $closureInfo/store-paths) \
