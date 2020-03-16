@@ -25,7 +25,7 @@
       };
 
       "c2.large.arm".configuration = {
-        favorability = 70;
+        favorability = 50;
         nix = {
           maxJobs = 16;
           buildCores = 2;
@@ -34,7 +34,7 @@
       };
 
       "c2.large.arm--armv7l".configuration = {
-        favorability = 10;
+        favorability = 20;
         services.openssh.ports = [ 2200 ];
         packet-nix-builder.armv7.enable = true;
         nix = {
@@ -46,7 +46,7 @@
       };
 
       "c2.large.arm--big-parallel".configuration = {
-        favorability = 20;
+        favorability = 30;
         nix = {
           maxJobs = 2;
           buildCores = 32;
