@@ -26,11 +26,20 @@
       };
 
       "m1.xlarge.x86".configuration = {
-        favorability = 100;
+        favorability = 70;
         nix = {
           maxJobs = 24;
           buildCores = 2;
           makeAbout = true;
+        };
+      };
+      "m1.xlarge.x86--big-parallel".configuration = {
+        favorability = 30;
+        nix = {
+          maxJobs = 1;
+          buildCores = 48;
+          makeAbout = true;
+          features = [ "big-parallel" ];
         };
       };
 
