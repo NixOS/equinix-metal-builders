@@ -9,7 +9,6 @@ let
 
   env = {
     NIX_PATH = "nixpkgs=https://nixos.org/channels/nixos-19.09/nixexprs.tar.xz";
-    NIX_SSHOPTS = "-i /etc/aarch64-ssh-private";
   };
 
   buildId = { platform } @ args: "build-${builtins.replaceStrings [ "." ] ["-"] (sourceSlug args) }";
@@ -32,7 +31,7 @@ let
 
     inherit env;
 
-    agents.r13y = true;
+    agents.nixos-foundation-netboot = true;
     concurrency = 1;
     concurrency_group = "build-${platform}-pxe";
   };
@@ -54,7 +53,7 @@ let
 
     inherit env;
 
-    agents.r13y = true;
+    agents.nixos-foundation-netboot = true;
     concurrency = 2;
     concurrency_group = "reboot-${sourceSlug { inherit platform; } }";
   };
