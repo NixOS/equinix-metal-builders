@@ -25,7 +25,6 @@ let
 
       export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-19.09/nixexprs.tar.xz"
 
-      cp /etc/aarch64-build-cfg ./build.cfg
       ./build-${platform}.sh ${sourceSlug { inherit platform; }}
     '';
 
@@ -47,7 +46,6 @@ let
 
       export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-19.09/nixexprs.tar.xz"
 
-      cp /etc/aarch64-build-cfg ./build.cfg
       ./reboot.sh ${device.id} ${dns_target} ${device.id}@sos.${device.facility.code}.packet.net
     '';
 
