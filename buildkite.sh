@@ -1,5 +1,5 @@
 #!/usr/bin/env nix-shell
-#!nix-shell -p curl -p jq -i bash
+#!nix-shell -p curl -p jq -i bash -I nixpkgs=channel:nixos-unstable-small
 
 set -eu
 set -o pipefail
@@ -28,4 +28,5 @@ curl \
     "https://api.packet.net/projects/${PACKET_PROJECT_ID}/devices?per_page=1000" \
     | jq . > ./devices.json
 
-nix-instantiate --eval --strict --json ./buildkite.nix | jq .
+nix-instantiate -I nixpkgs=channel:nixos-unstable-small \
+                --eval --strict --json ./buildkite.nix | jq .
