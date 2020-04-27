@@ -16,9 +16,12 @@ cfgOpt() {
 
     echo "$ret"
 }
-
-PACKET_TOKEN=$(cfgOpt "packetKey")
-PACKET_PROJECT_ID=$(cfgOpt "packetProjectId")
+if [ "${PACKET_TOKEN:-x}" == "x" ]; then
+    PACKET_TOKEN=$(cfgOpt "packetKey")
+fi
+if [ "${PACKET_PROJECT_ID:-x}" == "x" ]; then
+    PACKET_PROJECT_ID=$(cfgOpt "packetProjectId")
+fi
 
 curl \
     --header 'Accept: application/json' \
