@@ -23,11 +23,15 @@ cfgOpt() {
 nix-build ./build-support/aarch64-setup.nix --out-link ./importer
 ./importer
 
-buildHost=$(cat machines | grep aarch64 | grep big-parallel | cut -d' ' -f1)
+buildHost=$(cat machines | grep aarch64 | grep big-parallel | cut -d' ' -f1 | head -n1)
 pxeHost=netboot@flexo.gsc.io
 pxeDir=/var/lib/nginx/netboot/netboot.gsc.io/
 opensslServer=flexo.gsc.io
 opensslPort=61616
+
+printf "%s %s\n" \
+       "$buildHost" \
+       "$(grep "$buildHost" machines | head -n1 | cut -d' ' -f8 | base64 -d)" > KnownHosts
 
 
 #buildHost=$(cfgOpt "buildHost")
@@ -37,7 +41,7 @@ opensslPort=61616
 #opensslPort=$(cfgOpt "opensslPort")
 
 tmpDir=$(mktemp -t -d aarch64-builder.XXXXXX)
-SSHOPTS="${NIX_SSHOPTS:-} -o ControlMaster=auto -o ControlPath=$tmpDir/ssh-%n -o ControlPersist=60"
+SSHOPTS="${NIX_SSHOPTS:-} -o ControlMaster=auto -o ControlPath=$tmpDir/ssh-%n -o ControlPersist=60 -o UserKnownHosts=$(pwd)/KnownHosts"
 
 recvpid=0
 cleanup() {
