@@ -18,6 +18,7 @@ in pkgs.writeShellScript "aarch64-setup" ''
     cat ${./config.json} | jq '. | .token = env.PACKET_ACCESS_KEY' > ./config.creds.json
 
     ${importer}/bin/hydra-packet-importer ./config.creds.json > machines
+    rm config.creds.json
   )
   cp $scratch/machines ./machines
 ''

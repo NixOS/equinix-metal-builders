@@ -20,11 +20,21 @@ cfgOpt() {
     echo "$ret"
 }
 
-buildHost=$(cfgOpt "buildHost")
-pxeHost=$(cfgOpt "pxeHost")
-pxeDir=$(cfgOpt "pxeDir")
-opensslServer=$(cfgOpt "opensslServer")
-opensslPort=$(cfgOpt "opensslPort")
+nix-build ./build-support/aarch64-setup.nix --out-link ./importer
+./importer
+
+buildHost=$(cat machines | grep aarch64 | grep big-parallel | cut -d' ' -f1)
+pxeHost=netboot@flexo.gsc.io
+pxeDir=/var/lib/nginx/netboot/netboot.gsc.io/
+opensslServer=flexo.gsc.io
+opensslPort=61616
+
+
+#buildHost=$(cfgOpt "buildHost")
+#pxeHost=$(cfgOpt "pxeHost")
+#pxeDir=$(cfgOpt "pxeDir")
+#opensslServer=$(cfgOpt "opensslServer")
+#opensslPort=$(cfgOpt "opensslPort")
 
 tmpDir=$(mktemp -t -d aarch64-builder.XXXXXX)
 SSHOPTS="${NIX_SSHOPTS:-} -o ControlMaster=auto -o ControlPath=$tmpDir/ssh-%n -o ControlPersist=60"
