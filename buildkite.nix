@@ -35,9 +35,30 @@ let
     concurrency_group = "build-${platform}-pxe";
   };
 
+  mkDrainStep = device: { platform, ... } @ info: {
+    id = "drain-${device.id}";
+    depends_on = buildId { inherit platform; };
+    label = "drain: ${sourceSlug { inherit platform; }} -- ${device.plan.slug} -- ${device.facility.code} -- ${device.id}";
+    command = let
+      dns_target = device.short_id + ".packethost.net";
+    in ''
+      set -eux
+
+      export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-19.09/nixexprs.tar.xz"
+
+      ./drain.sh ${device.id} ${dns_target} ${device.id}@sos.${device.facility.code}.packet.net
+    '';
+
+    inherit env;
+
+    agents.nixos-foundation-netboot = true;
+    concurrency = 2;
+    concurrency_group = "reboot-${sourceSlug { inherit platform; } }";
+  };
+
   mkRebootStep = device: { platform, ... } @ info: {
     id = "reboot-${device.id}";
-    depends_on = buildId { inherit platform; };
+    depends_on = "drain-${device.id}";
     label = "reboot: ${sourceSlug { inherit platform; }} -- ${device.plan.slug} -- ${device.facility.code} -- ${device.id}";
     command = let
       dns_target = device.short_id + ".packethost.net";
@@ -47,6 +68,27 @@ let
       export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-19.09/nixexprs.tar.xz"
 
       ./reboot.sh ${device.id} ${dns_target} ${device.id}@sos.${device.facility.code}.packet.net
+    '';
+
+    inherit env;
+
+    agents.nixos-foundation-netboot = true;
+    concurrency = 2;
+    concurrency_group = "reboot-${sourceSlug { inherit platform; } }";
+  };
+
+  mkRestoreStep = device: { platform, ... } @ info: {
+    id = "restore-${device.id}";
+    depends_on = "reboot-${device.id}";
+    label = "restore: ${sourceSlug { inherit platform; }} -- ${device.plan.slug} -- ${device.facility.code} -- ${device.id}";
+    command = let
+      dns_target = device.short_id + ".packethost.net";
+    in ''
+      set -eux
+
+      export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-19.09/nixexprs.tar.xz"
+
+      ./restore.sh ${device.id} ${dns_target} ${device.id}@sos.${device.facility.code}.packet.net
     '';
 
     inherit env;
@@ -81,7 +123,11 @@ in {
         (device: builtins.elem device.ipxe_script_url interesting_urls)
         devices;
     in
-    (map (device: mkRebootStep device arch_by_url."${device.ipxe_script_url}") devices_to_reboot);
+    (builtins.concatMap (device: [
+      (mkDrainStep device arch_by_url."${device.ipxe_script_url}")
+      (mkRebootStep device arch_by_url."${device.ipxe_script_url}")
+      (mkRestoreStep device arch_by_url."${device.ipxe_script_url}")
+    ]) devices_to_reboot);
 
   in build_steps ++ reboot_steps;
 }

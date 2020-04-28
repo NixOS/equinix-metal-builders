@@ -25,14 +25,29 @@ if [ "${PACKET_PROJECT_ID:-x}" == "x" ]; then
     PACKET_PROJECT_ID=$(cfgOpt "packetProjectId")
 fi
 
-reboot() {
-    curl \
-        --data '{"type": "reboot"}' \
+restore() {
+    data=$((
+        curl \
+            --header 'Accept: application/json' \
+            --header 'Content-Type: application/json' \
+            --header "X-Auth-Token: $PACKET_TOKEN" \
+            --fail \
+            "https://api.packet.net/devices/${1}" \
+            | jq -r '.tags | .[]' | grep -v '^skip-hydra$'
+        # using jq -R . to convert the lines in to JSON strings,
+        # use jq -s . to convert the of JSON strings in to a JSON list
+          ) | jq -R . | jq -s '{
+          id: $id,
+          tags: .
+          }' --arg id "$1")
+
+    curl -X PATCH \
+        --data "${data}" \
         --header 'Accept: application/json' \
         --header 'Content-Type: application/json' \
         --header "X-Auth-Token: $PACKET_TOKEN" \
         --fail \
-        "https://api.packet.net/devices/${1}/actions"
+        "https://api.packet.net/devices/${1}" > /dev/null 2> /dev/null
 }
 
 
@@ -40,32 +55,7 @@ id=$1
 host=$2
 sos=$3
 
-reboot "${id}"
+echo "--- adding back to hydra"
+restore "${id}"
 
-echo "--- waiting for ${id} to go down"
-while [ $(ssh-keyscan "$host" 2> /dev/null | wc -l) -gt 0 ] ; do
-    echo -n "."
-done
-echo ""
-echo "        ... down!"
-
-echo "--- waiting for ${id} to come back up"
-
-keyscans_remaining=1200
-
-while [ $(ssh-keyscan "$host" 2> /dev/null  | wc -l) -eq 0 ] ; then
-    if
-        echo -n "."
-        keyscans_remaining=$((keyscans_remaining - 1))
-        if [ $keyscans_remaining -eq 0 ]; then
-            echo "Rebooting again..."
-            reboot "${id}"
-            keyscans_remaining=1200
-        fi
-    else
-        up=1
-    fi
-done
-
-echo ""
-echo "   ... up!"
+echo "--- ok!"
