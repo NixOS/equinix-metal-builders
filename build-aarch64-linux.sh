@@ -41,7 +41,8 @@ printf "%s %s\n" \
 #opensslPort=$(cfgOpt "opensslPort")
 
 tmpDir=$(mktemp -t -d aarch64-builder.XXXXXX)
-# SSHOPTS="${NIX_SSHOPTS:-} -o ControlMaster=auto -o ControlPath=$tmpDir/ssh-%n -o ControlPersist=60"
+SSHOPTS="${NIX_SSHOPTS:-}"
+# SSHOPTS="${SSHOPTS:-} -o ControlMaster=auto -o ControlPath=$tmpDir/ssh-%n -o ControlPersist=60"
 SSHOPTS="${SSHOPTS:-} -o UserKnownHostsFile=$(pwd)/KnownHosts"
 
 recvpid=0
