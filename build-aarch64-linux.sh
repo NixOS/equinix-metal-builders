@@ -30,7 +30,7 @@ opensslServer=flexo.gsc.io
 opensslPort=61616
 
 printf "%s %s\n" \
-       "$buildHost" \
+       "$(echo "$buildHost" | cut -d@ -f2)" \
        "$(grep "$buildHost" machines | head -n1 | cut -d' ' -f8 | base64 -d)" > KnownHosts
 
 
