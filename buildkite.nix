@@ -72,6 +72,13 @@ let
 
     inherit env;
 
+    retry.automatic = [
+      {
+        exit_status = 10;
+        limit = 2;
+      }
+    ];
+
     agents.nixos-foundation-netboot = true;
     concurrency = 2;
     concurrency_group = "reboot-${sourceSlug { inherit platform; } }";

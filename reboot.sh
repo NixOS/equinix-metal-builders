@@ -51,15 +51,14 @@ echo "        ... down!"
 
 echo "--- waiting for ${id} to come back up"
 
-keyscans_remaining=1200
+keyscans_remaining=1800
 
 while [ $(ssh-keyscan "$host" 2> /dev/null  | wc -l) -eq 0 ]; do
     echo -n "."
     keyscans_remaining=$((keyscans_remaining - 1))
     if [ $keyscans_remaining -eq 0 ]; then
-        echo "Rebooting again..."
-        reboot "${id}"
-        keyscans_remaining=1200
+        echo "Doesn't seem to be up after some time..."
+        exit 10
     fi
 done
 
