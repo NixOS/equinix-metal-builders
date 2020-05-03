@@ -33,6 +33,7 @@
         };
       };
 
+      /*
       "c2.large.arm--armv7l".configuration = {
         favorability = 20;
         services.openssh.ports = [ 2200 ];
@@ -44,6 +45,7 @@
           systemTypes = lib.mkForce [ "armv7l-linux" ];
         };
       };
+      */
 
       "c2.large.arm--big-parallel".configuration = {
         favorability = 30;
