@@ -14,9 +14,9 @@ cfgOpt() {
     echo "$ret"
 }
 
-pxeHost=netboot@2011dfe7.packethost.net
+pxeHost=netboot@netboot.gsc.io
 pxeDir=/var/lib/nginx/netboot/webroot/
-opensslServer=2011dfe7.packethost.net
+opensslServer=netboot.gsc.io
 opensslPort=61616
 
 #buildHost=$(cfgOpt "buildHost")
