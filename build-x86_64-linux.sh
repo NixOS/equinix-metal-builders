@@ -10,13 +10,13 @@ drv=$(realpath $(time nix-instantiate "./instances/$type.nix" --show-trace --add
 
 nix-copy-closure \
     --use-substitutes \
-    --to "netboot@flexo.gsc.io" \
+    --to "netboot@2011dfe7.packethost.net" \
     "$drv"
 
 ssh $NIX_SSHOPTS \
-    "netboot@flexo.gsc.io" \
+    "netboot@2011dfe7.packethost.net" \
     NIX_REMOTE=daemon \
     nix-store \
       --realize "$drv" \
-      --add-root "/var/lib/nginx/netboot/netboot.gsc.io/hydra-$type" \
+      --add-root "/var/lib/nginx/netboot/webroot/hydra-$type" \
       --indirect --keep-going

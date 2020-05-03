@@ -24,9 +24,9 @@ nix-build ./build-support/aarch64-setup.nix --out-link ./importer
 ./importer
 
 buildHost=$(cat machines | grep aarch64 | grep big-parallel | cut -d' ' -f1 | head -n1)
-pxeHost=netboot@flexo.gsc.io
-pxeDir=/var/lib/nginx/netboot/netboot.gsc.io/
-opensslServer=flexo.gsc.io
+pxeHost=netboot@2011dfe7.packethost.net
+pxeDir=/var/lib/nginx/netboot/webroot/
+opensslServer=2011dfe7.packethost.net
 opensslPort=61616
 
 printf "%s %s\n" \

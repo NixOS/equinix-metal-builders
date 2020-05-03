@@ -15,7 +15,7 @@ let
   sourceSlug = { platform }:
     "${platform}";
   toBuildUrl = { platform }:
-    "http://netboot.gsc.io/hydra-${sourceSlug { inherit platform; }}/netboot.ipxe";
+    "http://2011dfe7.packethost.net/hydra-${sourceSlug { inherit platform; }}/netboot.ipxe";
 
   mkBuildStep = { platform }: {
     id = buildId { inherit platform; };
