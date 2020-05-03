@@ -8,15 +8,17 @@ type=$1
 
 drv=$(realpath $(time nix-instantiate "./instances/$type.nix" --show-trace --add-root "./result-$type.drv" --indirect))
 
+. ./config.sh
+
 nix-copy-closure \
     --use-substitutes \
-    --to "netboot@2011dfe7.packethost.net" \
+    --to "$pxeHost" \
     "$drv"
 
 ssh $NIX_SSHOPTS \
-    "netboot@2011dfe7.packethost.net" \
+    "$pxeHost" \
     NIX_REMOTE=daemon \
     nix-store \
       --realize "$drv" \
-      --add-root "/var/lib/nginx/netboot/webroot/hydra-$type" \
+      --add-root "$pxeDir/hydra-$type" \
       --indirect --keep-going

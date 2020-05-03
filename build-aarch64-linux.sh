@@ -6,39 +6,16 @@ set -o pipefail
 
 type=$1
 
-cfgOpt() {
-    touch build.cfg
-    ret=$(awk '$1 == "'"$1"'" { print $2; }' build.cfg)
-    if [ -z "$ret" ]; then
-        echo "Config option '$1' isn't specified in build.cfg" >&2
-        echo "Example format:"
-        echo "$1        value"
-        echo ""
-        exit 1
-    fi
-
-    echo "$ret"
-}
+. ./config.sh
 
 nix-build ./build-support/aarch64-setup.nix --out-link ./importer
 ./importer
-
 buildHost=$(cat machines | grep aarch64 | grep big-parallel | cut -d' ' -f1 | head -n1)
-pxeHost=netboot@2011dfe7.packethost.net
-pxeDir=/var/lib/nginx/netboot/webroot/
-opensslServer=2011dfe7.packethost.net
-opensslPort=61616
-
 printf "%s %s\n" \
        "$(echo "$buildHost" | cut -d@ -f2)" \
        "$(grep "$buildHost" machines | head -n1 | cut -d' ' -f8 | base64 -d)" > KnownHosts
 
 
-#buildHost=$(cfgOpt "buildHost")
-#pxeHost=$(cfgOpt "pxeHost")
-#pxeDir=$(cfgOpt "pxeDir")
-#opensslServer=$(cfgOpt "opensslServer")
-#opensslPort=$(cfgOpt "opensslPort")
 
 tmpDir=$(mktemp -t -d aarch64-builder.XXXXXX)
 SSHOPTS="${NIX_SSHOPTS:-}"
