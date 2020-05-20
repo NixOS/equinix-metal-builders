@@ -33,6 +33,7 @@ let
     agents.nixos-foundation-netboot = true;
     concurrency = 1;
     concurrency_group = "build-${platform}-pxe";
+    concurrency_method = "eager";
   };
 
   mkDrainStep = device: { platform, ... } @ info: {
@@ -54,6 +55,7 @@ let
     agents.nixos-foundation-netboot = true;
     concurrency = 2;
     concurrency_group = "reboot-${sourceSlug { inherit platform; } }";
+    concurrency_method = "eager";
   };
 
   mkRebootStep = device: { platform, ... } @ info: {
@@ -82,6 +84,7 @@ let
     agents.nixos-foundation-netboot = true;
     concurrency = 2;
     concurrency_group = "reboot-${sourceSlug { inherit platform; } }";
+    concurrency_method = "eager";
   };
 
   mkRestoreStep = device: { platform, ... } @ info: {
@@ -103,6 +106,7 @@ let
     agents.nixos-foundation-netboot = true;
     concurrency = 2;
     concurrency_group = "reboot-${sourceSlug { inherit platform; } }";
+    concurrency_method = "eager";
   };
 
   to_build = [
