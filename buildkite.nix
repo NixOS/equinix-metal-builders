@@ -8,7 +8,7 @@ let
   in builtins.filter is_interesting raw_data.devices;
 
   env = {
-    NIX_PATH = "nixpkgs=https://nixos.org/channels/nixos-19.09/nixexprs.tar.xz";
+    NIX_PATH = "nixpkgs=https://nixos.org/channels/nixos-20.09/nixexprs.tar.xz";
   };
 
   buildId = { platform } @ args: "build-${builtins.replaceStrings [ "." ] ["-"] (sourceSlug args) }";
@@ -23,7 +23,7 @@ let
     command = ''
       set -eux
 
-      export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-19.09/nixexprs.tar.xz"
+      export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-20.09/nixexprs.tar.xz"
 
       ./build-${platform}.sh ${sourceSlug { inherit platform; }}
     '';
@@ -45,7 +45,7 @@ let
     in ''
       set -eux
 
-      export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-19.09/nixexprs.tar.xz"
+      export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-20.09/nixexprs.tar.xz"
 
       ./drain.sh ${device.id} ${dns_target} ${device.id}@sos.${device.facility.code}.packet.net
     '';
@@ -67,7 +67,7 @@ let
     in ''
       set -eux
 
-      export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-19.09/nixexprs.tar.xz"
+      export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-20.09/nixexprs.tar.xz"
 
       ./reboot.sh ${device.id} ${dns_target} ${device.id}@sos.${device.facility.code}.packet.net
     '';
@@ -96,7 +96,7 @@ let
     in ''
       set -eux
 
-      export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-19.09/nixexprs.tar.xz"
+      export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-20.09/nixexprs.tar.xz"
 
       ./restore.sh ${device.id} ${dns_target} ${device.id}@sos.${device.facility.code}.packet.net
     '';
