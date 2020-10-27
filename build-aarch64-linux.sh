@@ -8,6 +8,8 @@ type=$1
 
 . ./config.sh
 
+set -x
+
 nix-build ./build-support/aarch64-setup.nix --out-link ./importer
 ./importer
 buildHost=$(cat machines | grep aarch64 | grep big-parallel | cut -d' ' -f1 | head -n1)
