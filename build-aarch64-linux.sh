@@ -12,7 +12,7 @@ set -x
 
 nix-build ./build-support/aarch64-setup.nix --out-link ./importer
 ./importer
-buildHost=$(cat machines | grep aarch64 | grep big-parallel | cut -d' ' -f1 | head -n1)
+buildHost=$(cat machines | grep aarch64 | cut -d' ' -f1 | head -n1)
 printf "%s %s\n" \
        "$(echo "$buildHost" | cut -d@ -f2)" \
        "$(grep "$buildHost" machines | head -n1 | cut -d' ' -f8 | base64 -d)" > KnownHosts
