@@ -10,14 +10,9 @@
     ];
 
     nix = {
-      package = pkgs.nixUnstable;
       gbFree = 100;
-      features = [ "kvm" "nixos-test" "recursive-nix" ];
+      features = [ "kvm" "nixos-test" ];
       systemTypes = [ "x86_64-linux" "i686-linux" ];
-      systemFeatures = [ "kvm" "nixos-test" "recursive-nix" ];
-      extraOptions = ''
-        experimental-features = recursive-nix
-      '';
     };
 
     specialisation = {
