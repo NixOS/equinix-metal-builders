@@ -7,6 +7,8 @@ let
       set -eux
       set -o pipefail
 
+      ${pkgs.systemd}/bin/udevadm settle
+
       ${pkgs.utillinux}/bin/lsblk --output-all
 
       ${pkgs.utillinux}/bin/lsblk -d -e 1,7,11,230 -o NAME -n \
