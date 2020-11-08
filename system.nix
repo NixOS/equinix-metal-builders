@@ -9,7 +9,9 @@ let
 
       ${pkgs.systemd}/bin/udevadm settle
 
-      ${pkgs.utillinux}/bin/lsblk --output-all
+      ${pkgs.utillinux}/bin/lsblk --output-all || true
+      ${pkgs.pciutils}/bin/lspci -nnk || true
+      ${pkgs.kmod}/bin/lsmod || true
 
       ${pkgs.utillinux}/bin/lsblk -d -e 1,7,11,230 -o NAME -n \
         | ${pkgs.busybox}/bin/sed -e "s#^#/dev/#" \
