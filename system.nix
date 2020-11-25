@@ -62,6 +62,10 @@ in
   config = {
     boot.supportedFilesystems = [ "zfs" ];
     boot.initrd.postDeviceCommands = "${post-device-cmds}";
+    boot.initrd.preDeviceCommands = ''
+      echo "Interrupt within 3 seconds to get a shell..."
+      sleep 3 || exec sh
+    '';
 
     hardware.enableAllFirmware = true;
 
