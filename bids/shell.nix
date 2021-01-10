@@ -5,7 +5,7 @@ in pkgs.mkShell {
     pkgs.jq
     (pkgs.terraform_0_12.withPlugins (p: [
       (pkgs.buildGoPackage rec {
-        name = "terraform-provider-metal";
+        pname = "terraform-provider-metal";
         version = "1.0.0";
         goPackagePath = "github.com/equinix/terraform-provider-metal";
         subPackages = [ "." ];
