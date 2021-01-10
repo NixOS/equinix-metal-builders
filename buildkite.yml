@@ -6,7 +6,7 @@ steps:
     artifact_paths:
       - "bids/terraform.plan"
   - label: Generate and Upload
-    command: ./enter-env.sh ./buildkite.sh > buildkite-generated.yaml && buildkite-agent pipeline upload ./buildkite-generated.yaml
+    command: ./enter-env.sh ./buildkite.sh > buildkite-generated.yaml && echo buildkite-agent pipeline upload ./buildkite-generated.yaml
     agents:
       nixos-foundation-netboot: true
     
