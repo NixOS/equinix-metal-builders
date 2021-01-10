@@ -1,5 +1,12 @@
 steps:
-  - label: Generate and Upload
-    command: ./buildkite.sh > buildkite-generated.yaml && buildkite-agent pipeline upload ./buildkite-generated.yaml
+  - label: Terraform Plan
+    command: ./enter-env.sh sh -c "cd bids && nix-shell --run 'terraform plan -out ./terraform.plan'"
     agents:
       nixos-foundation-netboot: true
+    artifact_paths:
+      - "bids/terraform.plan"
+  - label: Generate and Upload
+    command: ./enter-env.sh ./buildkite.sh > buildkite-generated.yaml && buildkite-agent pipeline upload ./buildkite-generated.yaml
+    agents:
+      nixos-foundation-netboot: true
+    
