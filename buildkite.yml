@@ -1,6 +1,6 @@
 steps:
   - label: Terraform Plan
-    command: ./enter-env.sh sh -c "cd bids && nix-shell --run 'terraform plan -out ./terraform.plan'"
+    command: ./enter-env.sh sh -c "cd bids && nix-shell --run 'terraform init && terraform plan -out ./terraform.plan'"
     env:
       NIX_PATH: nixpkgs=channel:nixos-unstable-small
     agents:
