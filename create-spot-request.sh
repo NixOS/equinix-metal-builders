@@ -6,7 +6,7 @@ set -o pipefail
 
 # Set these ...
 #PACKET_PROJECT_ID=
-#PACKET_TOKEN=
+#PACKET_AUTH_TOKEN=
 #URL=
 
 facilities='["ams1"]'
@@ -17,7 +17,7 @@ export URL="http://netboot.gsc.io/hydra-$PLAN/netboot.ipxe"
 facilities=$(curl \
          --header 'Accept: application/json' \
          --header 'Content-Type: application/json' \
-         --header "X-Auth-Token: $PACKET_TOKEN" \
+         --header "X-Auth-Token: $PACKET_AUTH_TOKEN" \
          --fail \
          "https://api.packet.net/facilities" \
          | tee /dev/stderr \
@@ -60,7 +60,7 @@ echo "Creating server with: ${json}" >&2
 curl --data "$json" \
          --header 'Accept: application/json' \
          --header 'Content-Type: application/json' \
-         --header "X-Auth-Token: $PACKET_TOKEN" \
+         --header "X-Auth-Token: $PACKET_AUTH_TOKEN" \
          --fail \
          "https://api.packet.net/projects/$PACKET_PROJECT_ID/spot-market-requests" \
          | tee /dev/stderr \

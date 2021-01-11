@@ -18,8 +18,8 @@ cfgOpt() {
     echo "$ret"
 }
 
-if [ "${PACKET_TOKEN:-x}" == "x" ]; then
-    PACKET_TOKEN=$(cfgOpt "packetKey")
+if [ "${PACKET_AUTH_TOKEN:-x}" == "x" ]; then
+    PACKET_AUTH_TOKEN=$(cfgOpt "packetKey")
 fi
 if [ "${PACKET_PROJECT_ID:-x}" == "x" ]; then
     PACKET_PROJECT_ID=$(cfgOpt "packetProjectId")
@@ -30,7 +30,7 @@ reboot() {
         --data '{"type": "reboot"}' \
         --header 'Accept: application/json' \
         --header 'Content-Type: application/json' \
-        --header "X-Auth-Token: $PACKET_TOKEN" \
+        --header "X-Auth-Token: $PACKET_AUTH_TOKEN" \
         --fail \
         "https://api.packet.net/devices/${1}/actions"
 }
