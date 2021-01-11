@@ -21,7 +21,7 @@ steps:
   - label: Terraform Apply
     depends_on: terraform-plan
     command:
-      - buildkite-agent artifact download bids/terraform.plan bids/terraform.plan
+      - buildkite-agent artifact download bids/terraform.plan bids/
       - ./enter-env.sh sh -c "cd bids && nix-shell --run 'terraform init && terraform apply -plan ./terraform.plan'"
     env:
       NIX_PATH: nixpkgs=channel:nixos-unstable-small
