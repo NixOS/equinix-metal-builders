@@ -25,7 +25,7 @@ let
 
       export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-20.09/nixexprs.tar.xz"
 
-      ./build-${platform}.sh ${sourceSlug { inherit platform; }}
+      ./enter-env.sh ./build-${platform}.sh ${sourceSlug { inherit platform; }}
     '';
 
     inherit env;
@@ -47,7 +47,7 @@ let
 
       export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-20.09/nixexprs.tar.xz"
 
-      ./drain.sh ${device.id} ${dns_target} ${device.id}@sos.${device.facility.code}.packet.net
+      ./enter-env.sh ./drain.sh ${device.id} ${dns_target} ${device.id}@sos.${device.facility.code}.packet.net
     '';
 
     inherit env;
@@ -69,7 +69,7 @@ let
 
       export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-20.09/nixexprs.tar.xz"
 
-      ./reboot.sh ${device.id} ${dns_target} ${device.id}@sos.${device.facility.code}.packet.net
+      ./enter-env.sh ./reboot.sh ${device.id} ${dns_target} ${device.id}@sos.${device.facility.code}.packet.net
     '';
 
     inherit env;
@@ -98,7 +98,7 @@ let
 
       export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-20.09/nixexprs.tar.xz"
 
-      ./restore.sh ${device.id} ${dns_target} ${device.id}@sos.${device.facility.code}.packet.net
+      ./enter-env.sh ./restore.sh ${device.id} ${dns_target} ${device.id}@sos.${device.facility.code}.packet.net
     '';
 
     inherit env;
