@@ -2,7 +2,9 @@ steps:
     
 
   - label: Generate and Upload
-    command: ./enter-env.sh ./buildkite.sh > buildkite-generated.yaml && echo buildkite-agent pipeline upload ./buildkite-generated.yaml
+    command: ./enter-env.sh ./buildkite.sh > buildkite-generated.yaml && buildkite-agent pipeline upload ./buildkite-generated.yaml
+    env:
+      NIX_PATH: nixpkgs=channel:nixos-unstable-small
     agents:
       nixos-foundation-netboot: true
 
