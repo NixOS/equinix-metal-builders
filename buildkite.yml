@@ -17,9 +17,11 @@ steps:
       - "bids/terraform.plan"
 
   - block: ":terraform: apply!"
+    depends_on: terraform-plan
+    key: terraform-confirm
 
   - label: Terraform Apply
-    depends_on: terraform-plan
+    depends_on: terraform-confirm
     command:
       - buildkite-agent artifact download bids/terraform.plan bids/
       - ./enter-env.sh sh -c "cd bids && nix-shell --run 'terraform init && terraform apply -plan ./terraform.plan'"
