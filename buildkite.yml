@@ -24,7 +24,7 @@ steps:
     depends_on: terraform-confirm
     command:
       - buildkite-agent artifact download bids/terraform.plan bids/
-      - ./enter-env.sh sh -c "cd bids && nix-shell --run 'terraform init && terraform apply -plan ./terraform.plan'"
+      - ./enter-env.sh sh -c "cd bids && nix-shell --run 'terraform init && terraform apply ./terraform.plan'"
     env:
       NIX_PATH: nixpkgs=channel:nixos-unstable-small
     agents:
