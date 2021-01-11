@@ -58,7 +58,7 @@ vault write -field=signed_key \
   ssh-keys/sign/netboot public_key=@./deploy.key.pub > deploy.key-cert.pub
 export SSH_IDENTITY_FILE=$(pwd)/deploy.key
 export SSH_USER=root
-export NIX_SSHOPTS="-i '$SSH_IDENTITY_FILE'"
+export NIX_SSHOPTS="-i $SSH_IDENTITY_FILE"
 
 
 if [ "x${1:-}" == "x" ]; then
