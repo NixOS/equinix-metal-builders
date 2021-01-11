@@ -23,9 +23,11 @@ VAULT_EXIT_ACCESSOR=$(jq -r .auth.accessor <<<"$vault_creds")
 expiration_ts=$(($(date '+%s') + "$(jq -r .auth.lease_duration<<<"$vault_creds")"))
 export VAULT_TOKEN=$(jq -r .auth.client_token <<<"$vault_creds")
 
-echo "--> Setting variables: PACKET_AUTH_TOKEN, AWS_ACCESS_KEY_ID" >&2
+echo "--> Setting variables: PACKET_AUTH_TOKEN, PACKET_PROJECT_ID, AWS_ACCESS_KEY_ID" >&2
 echo "                       AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN" >&2
 export PACKET_AUTH_TOKEN=$(vault kv get -field api_key_token packet/creds/grahamc)
+export PACKET_PROJECT_ID=$(vault kv get \
+    -field=project_id secret/buildkite/nixos-foundation/packet-project-id)
 
 aws_creds=$(vault kv get -format=json aws-personal/creds/state-packet-nix-builder)
 export AWS_ACCESS_KEY_ID=$(jq -r .data.access_key <<<"$aws_creds")
