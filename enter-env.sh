@@ -8,7 +8,7 @@ function finish {
   rm -rf "$scratch"
   if [ "x${VAULT_EXIT_ACCESSOR:-}" != "x" ]; then
     echo "--> Revoking my token ..." >&2
-    vault token revoke -self
+    vault token revoke -self || true
   fi
 }
 trap finish EXIT
