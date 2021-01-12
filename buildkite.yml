@@ -1,5 +1,39 @@
 steps:
+    
+
   - label: Generate and Upload
-    command: ./buildkite.sh > buildkite-generated.yaml && buildkite-agent pipeline upload ./buildkite-generated.yaml
+    command:
+      - ./enter-env.sh sh -c './buildkite.sh > buildkite-generated.yaml'
+      - buildkite-agent pipeline upload ./buildkite-generated.yaml
+    env:
+      NIX_PATH: nixpkgs=channel:nixos-unstable-small
+    agents:
+      nixos-foundation-netboot: true
+
+  - label: Terraform Plan
+    key: terraform-plan
+    concurrency_group: packet-nix-builder-terraform
+    concurrency: 1
+    command: ./enter-env.sh sh -c "cd bids && nix-shell --run 'terraform init && terraform plan -out ./terraform.plan'"
+    env:
+      NIX_PATH: nixpkgs=channel:nixos-unstable-small
+    agents:
+      nixos-foundation-netboot: true
+    artifact_paths:
+      - "bids/terraform.plan"
+
+  - block: ":terraform: apply!"
+    depends_on: terraform-plan
+    key: terraform-confirm
+
+  - label: Terraform Apply
+    concurrency_group: packet-nix-builder-terraform
+    concurrency: 1
+    depends_on: terraform-confirm
+    command:
+      - buildkite-agent artifact download bids/terraform.plan bids/
+      - ./enter-env.sh sh -c "cd bids && nix-shell --run 'terraform init && terraform apply ./terraform.plan'"
+    env:
+      NIX_PATH: nixpkgs=channel:nixos-unstable-small
     agents:
       nixos-foundation-netboot: true

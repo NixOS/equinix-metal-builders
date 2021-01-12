@@ -12,10 +12,10 @@ in pkgs.writeShellScript "aarch64-setup" ''
 
   (
     cd "$scratch"
-    echo 'Using the PACKET_TOKEN environment variable for Packet creds'
+    echo 'Using the PACKET_AUTH_TOKEN environment variable for Packet creds'
     touch config.creds.json
     chmod 0600 config.creds.json
-    cat ${./config.json} | jq '. | .token = env.PACKET_TOKEN' > ./config.creds.json
+    cat ${./config.json} | jq '. | .token = env.PACKET_AUTH_TOKEN' > ./config.creds.json
 
     ${importer}/bin/hydra-packet-importer ./config.creds.json > machines
     rm config.creds.json
