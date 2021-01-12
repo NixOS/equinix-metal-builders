@@ -127,6 +127,7 @@ variable "reservation_facility_names" {
   }
 }
 
+# Reservations where the underlying hardware is probably broken
 variable "reservation_broken" {
   type = list(string)
   default = [
