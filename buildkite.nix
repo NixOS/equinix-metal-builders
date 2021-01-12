@@ -55,7 +55,7 @@ let
     inherit env;
 
     agents.nixos-foundation-netboot = true;
-    concurrency = 2;
+    concurrency = 4;
     concurrency_group = "reboot-${sourceSlug { inherit platform; } }";
     concurrency_method = "eager";
   };
@@ -85,7 +85,7 @@ let
     ];
 
     agents.nixos-foundation-netboot = true;
-    concurrency = 2;
+    concurrency = 4;
     concurrency_group = "reboot-${sourceSlug { inherit platform; } }";
     concurrency_method = "eager";
   };
@@ -108,7 +108,7 @@ let
     inherit env;
 
     agents.nixos-foundation-netboot = true;
-    concurrency = 2;
+    concurrency = 4;
     concurrency_group = "reboot-${sourceSlug { inherit platform; } }";
     concurrency_method = "eager";
   };
