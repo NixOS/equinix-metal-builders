@@ -37,11 +37,12 @@ if [ -z "$AWS_SESSION_TOKEN" ] ||  [ "$AWS_SESSION_TOKEN" == "null" ]; then
   unset AWS_SESSION_TOKEN
 fi
 
+echo "--> Preflight testing the AWS credentials..." >&2
 for  i in $(seq 1 100); do
   if aws sts get-caller-identity > /dev/null; then
     break;
   else
-    echo "Trying again in 1s..."
+    echo "    Trying again in 1s..." >&2
     sleep 1
   fi
 done
