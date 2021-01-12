@@ -5,13 +5,14 @@ let
       (builtins.elem "hydra" device.tags)
       && (device.operating_system.slug == "custom_ipxe")
     );
-  in builtins.filter is_interesting raw_data.devices;
+  in
+    builtins.filter is_interesting raw_data.devices;
 
   env = {
     NIX_PATH = "nixpkgs=https://nixos.org/channels/nixos-20.09/nixexprs.tar.xz";
   };
 
-  buildId = { platform } @ args: "build-${builtins.replaceStrings [ "." ] ["-"] (sourceSlug args) }";
+  buildId = { platform } @ args: "build-${builtins.replaceStrings [ "." ] [ "-" ] (sourceSlug args) }";
   sourceSlug = { platform }:
     "${platform}";
   toBuildUrl = { platform }:
@@ -42,13 +43,14 @@ let
     label = "drain: ${sourceSlug { inherit platform; }} -- ${device.plan.slug} -- ${device.facility.code} -- ${device.id}";
     command = let
       dns_target = device.short_id + ".packethost.net";
-    in ''
-      set -eux
+    in
+      ''
+        set -eux
 
-      export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-20.09/nixexprs.tar.xz"
+        export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-20.09/nixexprs.tar.xz"
 
-      ./enter-env.sh ./drain.sh ${device.id} ${dns_target} ${device.id}@sos.${device.facility.code}.packet.net
-    '';
+        ./enter-env.sh ./drain.sh ${device.id} ${dns_target} ${device.id}@sos.${device.facility.code}.packet.net
+      '';
 
     inherit env;
 
@@ -64,13 +66,14 @@ let
     label = "reboot: ${sourceSlug { inherit platform; }} -- ${device.plan.slug} -- ${device.facility.code} -- ${device.id}";
     command = let
       dns_target = device.short_id + ".packethost.net";
-    in ''
-      set -eux
+    in
+      ''
+        set -eux
 
-      export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-20.09/nixexprs.tar.xz"
+        export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-20.09/nixexprs.tar.xz"
 
-      ./enter-env.sh ./reboot.sh ${device.id} ${dns_target} ${device.id}@sos.${device.facility.code}.packet.net
-    '';
+        ./enter-env.sh ./reboot.sh ${device.id} ${dns_target} ${device.id}@sos.${device.facility.code}.packet.net
+      '';
 
     inherit env;
 
@@ -93,13 +96,14 @@ let
     label = "restore: ${sourceSlug { inherit platform; }} -- ${device.plan.slug} -- ${device.facility.code} -- ${device.id}";
     command = let
       dns_target = device.short_id + ".packethost.net";
-    in ''
-      set -eux
+    in
+      ''
+        set -eux
 
-      export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-20.09/nixexprs.tar.xz"
+        export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-20.09/nixexprs.tar.xz"
 
-      ./enter-env.sh ./restore.sh ${device.id} ${dns_target} ${device.id}@sos.${device.facility.code}.packet.net
-    '';
+        ./enter-env.sh ./restore.sh ${device.id} ${dns_target} ${device.id}@sos.${device.facility.code}.packet.net
+      '';
 
     inherit env;
 
@@ -114,7 +118,8 @@ let
     { platform = "aarch64-linux"; }
   ];
 
-in {
+in
+{
   dag = true;
   steps = let
     build_steps = map mkBuildStep to_build;
@@ -125,7 +130,7 @@ in {
 
       arch_by_url = builtins.listToAttrs (
         map (todo: { name = todo.url; value = { inherit (todo) platform; }; })
-        plan_urls
+          plan_urls
       );
 
       interesting_urls = builtins.attrNames arch_by_url;
@@ -134,11 +139,16 @@ in {
         (device: builtins.elem device.ipxe_script_url interesting_urls)
         devices;
     in
-    (builtins.concatMap (device: [
-      (mkDrainStep device arch_by_url."${device.ipxe_script_url}")
-      (mkRebootStep device arch_by_url."${device.ipxe_script_url}")
-      (mkRestoreStep device arch_by_url."${device.ipxe_script_url}")
-    ]) devices_to_reboot);
+      (
+        builtins.concatMap (
+          device: [
+            (mkDrainStep device arch_by_url."${device.ipxe_script_url}")
+            (mkRebootStep device arch_by_url."${device.ipxe_script_url}")
+            (mkRestoreStep device arch_by_url."${device.ipxe_script_url}")
+          ]
+        ) devices_to_reboot
+      );
 
-  in build_steps ++ reboot_steps;
+  in
+    build_steps ++ reboot_steps;
 }
