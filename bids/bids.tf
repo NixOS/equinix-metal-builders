@@ -265,21 +265,6 @@ resource "metal_device" "reservation" {
   hardware_reservation_id = each.key
 
   ipxe_script_url                  = var.reservation_class_urls[each.value.class]
-#  user_data = <<USERDATA
-##!ipxe
-#
-#set ntpserver pool.ntp.org
-#set chainto ${var.reservation_class_urls[each.value.class]}
-#
-#echo Syncing iPXE's clock with ${ntpserver}
-#echo Unsynchronized time: date --date=@$((${unixtime}))
-#ntp ${ntpserver}
-#echo Synchronized time: date --date=@$((${unixtime}))
-#
-#echo Chainloading to ${chainto}
-#
-#chain ${chainto}
-#USERDATA
   project_ssh_key_ids              = []
   tags                             = concat(var.tags, ["hydra"])
   wait_for_reservation_deprovision = true
