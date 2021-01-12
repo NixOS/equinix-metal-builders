@@ -1,5 +1,5 @@
 let
-  pkgs = import <nixpkgs> {};
+  pkgs = import (builtins.fetchTarball "channel:nixos-unstable-small") {}
 in pkgs.mkShell {
   buildInputs = [
     pkgs.jq
@@ -22,4 +22,3 @@ in pkgs.mkShell {
     ]))
   ];
 }
-

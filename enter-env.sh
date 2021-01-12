@@ -1,5 +1,5 @@
 #!/usr/bin/env nix-shell
-#!nix-shell -i bash -p bashInteractive vault awscli jq openssh
+#!nix-shell -i bash -I nixpkgs=channel:nixos-unstable-small -p bashInteractive vault awscli jq openssh
 
 set -eu
 
@@ -81,4 +81,3 @@ bash --init-file "$scratch/bashrc"
 else
   "$@"
 fi
-
