@@ -1,0 +1,16 @@
+steps:
+  - block: ":terraform: apply!"
+      depends_on: terraform-plan
+    key: terraform-confirm
+
+  - label: Terraform Apply
+    concurrency_group: packet-nix-builder-terraform
+    concurrency: 1
+    depends_on: terraform-confirm
+    command:
+      - buildkite-agent artifact download bids/terraform.plan bids/
+      - ./enter-env.sh sh -c "cd bids && nix-shell --run 'terraform init && terraform apply ./terraform.plan'"
+    env:
+      NIX_PATH: nixpkgs=channel:nixos-unstable-small
+    agents:
+      nixos-foundation-netboot: true
