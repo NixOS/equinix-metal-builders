@@ -276,17 +276,3 @@ resource "metal_device" "reservation" {
   }
 }
 
-resource "metal_device" "sphalerite" {
-  project_id       = var.project_id
-  hostname         = "sphalerite"
-  billing_cycle    = "hourly"
-  operating_system = "custom_ipxe"
-  always_pxe       = true
-  plan             = "c1.large.arm"
-  facilities       = ["ewr1"]
-
-  ipxe_script_url     = "http://netboot.linuxhacker.men/boot.ipxe"
-  project_ssh_key_ids = ["1b6fc7a7-eeaf-4880-bba4-f5ac4b22856f"] # sphalerite's key
-  tags                = concat(var.tags, ["sphalerite", "skip-hydra"])
-}
-
