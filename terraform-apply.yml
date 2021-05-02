@@ -1,6 +1,6 @@
 steps:
   - block: ":terraform: apply!"
-      depends_on: terraform-plan
+    depends_on: terraform-plan
     key: terraform-confirm
 
   - label: Terraform Apply
