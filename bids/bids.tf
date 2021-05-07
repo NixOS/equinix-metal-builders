@@ -23,10 +23,6 @@ variable "reservations" {
     class    = string
   }))
   default = {
-    "d5c94563-eede-445c-8a33-89853e0a4afd" : {
-      "facility" : "e1e9c52e-a0bc-4117-b996-0fc94843ea09",
-      "class" : "baremetal_2a5"
-    },
     "106657f6-95f2-4447-96d1-1e28f9c688a5" : {
       "facility" : "c9dcbd06-6797-4096-b648-1be16dd5d833",
       "class" : "baremetal_2a5"
@@ -79,10 +75,6 @@ variable "reservations" {
       "facility" : "e1e9c52e-a0bc-4117-b996-0fc94843ea09",
       "class" : "c2.large.arm"
     },
-    "aa3fee8e-3cdf-4562-af26-c36cff180827" : {
-      "facility" : "c9dcbd06-6797-4096-b648-1be16dd5d833",
-      "class" : "baremetal_2a5"
-    },
     "0f22764a-707d-4279-acfe-862bd6f2607d" : {
       "facility" : "c9dcbd06-6797-4096-b648-1be16dd5d833",
       "class" : "baremetal_2a5"
@@ -91,22 +83,6 @@ variable "reservations" {
       "facility" : "c9dcbd06-6797-4096-b648-1be16dd5d833",
       "class" : "baremetal_2a5"
     },
-    "fbbc4c82-dad8-4ff0-a5e4-f028910ac2ce" : {
-      "facility" : "c9dcbd06-6797-4096-b648-1be16dd5d833",
-      "class" : "baremetal_2a5"
-    },
-    "89873ca4-8345-4529-9762-669df5fb175e" : {
-      "facility" : "c9dcbd06-6797-4096-b648-1be16dd5d833",
-      "class" : "baremetal_2a5"
-    },
-    "43e2dbd2-451e-485e-bd98-206d44af4b8c" : {
-      "facility" : "c9dcbd06-6797-4096-b648-1be16dd5d833",
-      "class" : "baremetal_2a5"
-    },
-    "218a7f82-24e8-4b00-8891-a32510b0d32b" : {
-      "facility" : "c9dcbd06-6797-4096-b648-1be16dd5d833",
-      "class" : "baremetal_2a5"
-    }
   }
 }
 
@@ -131,8 +107,6 @@ variable "reservation_facility_names" {
 variable "reservation_broken" {
   type = list(string)
   default = [
-    "aa3fee8e-3cdf-4562-af26-c36cff180827",
-    "d5c94563-eede-445c-8a33-89853e0a4afd",
   ]
 }
 
