@@ -159,13 +159,13 @@ variable "bids" {
     {
       price = 2.0
       plan  = "m1.xlarge.x86"
-      name  = "m1.xlarge.x86-big--parallel"
+      name  = "m1.xlarge.x86--big-parallel"
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
     },
     {
       price = 1.99
       plan  = "m1.xlarge.x86"
-      name  = "m1.xlarge.x86-big--parallel"
+      name  = "m1.xlarge.x86--big-parallel"
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
     },
     {
