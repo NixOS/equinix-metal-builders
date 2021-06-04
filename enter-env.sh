@@ -13,11 +13,11 @@ function finish {
 }
 trap finish EXIT
 
-echo "--> Assuming role: packet-nix-builder-deployers" >&2
+echo "--> Assuming role: packet-nix-builder" >&2
 vault_creds=$(vault token create \
 	-display-name=grahamc-packet-nix-builder \
 	-format=json \
-	-role packet-nix-builder-deployers)
+	-role packet-nix-builder)
 
 VAULT_EXIT_ACCESSOR=$(jq -r .auth.accessor <<<"$vault_creds")
 expiration_ts=$(($(date '+%s') + "$(jq -r .auth.lease_duration<<<"$vault_creds")"))
