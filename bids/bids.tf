@@ -35,10 +35,6 @@ variable "reservations" {
       "facility" : "c9dcbd06-6797-4096-b648-1be16dd5d833",
       "class" : "baremetal_2a5"
     },
-    "6bf9dd7f-2129-46a9-ae35-b54d6dbd63a1" : {
-      "facility" : "d0c0d80d-4637-4fa0-b79e-803fc42b19bd",
-      "class" : "baremetal_2a5"
-    },
     "0a768cab-6e80-4012-ac79-91555ee9bad4" : {
       "facility" : "e1e9c52e-a0bc-4117-b996-0fc94843ea09",
       "class" : "baremetal_2a5"
