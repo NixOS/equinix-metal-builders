@@ -6,6 +6,12 @@ terraform {
     key    = "packet-nix-builder/terraform.tfstate"
     region = "us-east-1"
   }
+
+  required_providers {
+    metal = {
+      source = "nixpkgs/metal"
+    }
+  }
 }
 
 variable "tags" {
