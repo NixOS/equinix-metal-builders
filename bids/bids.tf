@@ -194,6 +194,18 @@ variable "bids" {
       name  = ""
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
     },
+    {
+      price = 1.93
+      plan  = "m1.xlarge.x86"
+      name  = ""
+      url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
+    },
+    {
+      price = 1.92
+      plan  = "m1.xlarge.x86"
+      name  = ""
+      url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
+    },
   ]
 }
 
