@@ -223,7 +223,7 @@ resource "metal_spot_market_request" "request" {
   for_each      = local.named_bids
   project_id    = var.project_id
   max_bid_price = each.value.price
-  facilities    = ["ams1", "sjc1", "dfw2", "nrt1", "ewr1"]
+  facilities    = [ "sjc1", "dfw2", "ewr1" ] # todo: add nrt1 and ams1; their spot markets were churning in 2021-09-03
   devices_min   = 1
   devices_max   = 1
 
