@@ -6,18 +6,18 @@ in pkgs.mkShell {
     (pkgs.terraform_1_0.withPlugins (p: [
       (pkgs.buildGoPackage rec {
         pname = "terraform-provider-metal";
-        version = "1.0.0";
+        version = "3.1.0";
         goPackagePath = "github.com/equinix/terraform-provider-metal";
         subPackages = [ "." ];
         src = pkgs.fetchFromGitHub {
           owner = "equinix";
           repo = "terraform-provider-metal";
-          rev = "v1.0.0";
-          sha256 = "sha256-wA3L0SEDWyU5OwrK+5W59Be9hNaC/gahu1fBaU5xmt4=";
+          rev = "v3.1.0";
+          sha256 = "sha256-9K3DnEWQAFXMKdWAsi83qUfQ7ZWxblS4gRjhvphSblc=";
         };
         # Terraform allow checking the provider versions, but this breaks
         # if the versions are not provided via file paths.
-        postBuild = "mv go/bin/terraform-provider-metal{,_v1.0.0}";
+        postBuild = "mv go/bin/terraform-provider-metal{,_v3.1.0}";
       })
     ]))
   ];

@@ -128,12 +128,6 @@ variable "bids" {
   }))
   default = [
     {
-      price = 2
-      plan  = "c1.large.arm"
-      name  = ""
-      url   = "https://netboot.gsc.io/hydra-aarch64-linux/netboot.ipxe"
-    },
-    {
       price = 1.99
       plan  = "c2.large.arm"
       name  = "c2.large.arm--big-parallel"
@@ -160,55 +154,37 @@ variable "bids" {
 
     {
       price = 2.0
-      plan  = "m1.xlarge.x86"
-      name  = "m1.xlarge.x86--big-parallel"
+      plan  = "c3.medium.x86"
+      name  = "c3.medium.x86--big-parallel"
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
     },
     {
       price = 1.99
-      plan  = "m1.xlarge.x86"
-      name  = "m1.xlarge.x86--big-parallel"
+      plan  = "c3.medium.x86"
+      name  = "c3.medium.x86--big-parallel"
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
     },
     {
       price = 1.98
-      plan  = "m1.xlarge.x86"
+      plan  = "c3.medium.x86"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
     },
     {
       price = 1.97
-      plan  = "m1.xlarge.x86"
+      plan  = "m3.large.x86"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
     },
     {
       price = 1.96
-      plan  = "m1.xlarge.x86"
+      plan  = "m3.large.x86"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
     },
     {
       price = 1.95
-      plan  = "m1.xlarge.x86"
-      name  = ""
-      url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
-    },
-    {
-      price = 1.94
-      plan  = "m1.xlarge.x86"
-      name  = ""
-      url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
-    },
-    {
-      price = 1.93
-      plan  = "m1.xlarge.x86"
-      name  = ""
-      url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
-    },
-    {
-      price = 1.92
-      plan  = "m1.xlarge.x86"
+      plan  = "m3.large.x86"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
     },
@@ -223,9 +199,12 @@ resource "metal_spot_market_request" "request" {
   for_each      = local.named_bids
   project_id    = var.project_id
   max_bid_price = each.value.price
-  facilities    = [ "sjc1", "dfw2", "ewr1" ] # todo: add nrt1 and ams1; their spot markets were churning in 2021-09-03
-  devices_min   = 1
-  devices_max   = 1
+  # facilities    = [ "sjc1", "dfw2", "ewr1" ] # todo: add nrt1 and ams1; their spot markets were churning in 2021-09-03
+  # metros         = [ "DC", "DA", "SV", "SP", "AM", "FR", "SG", "SV" ]
+  metro = "AM"
+  # facilities  = ["ewr1"]
+  devices_min = 1
+  devices_max = 1
 
   instance_parameters {
     hostname         = each.value.name == "" ? each.value.plan : each.value.name
@@ -242,7 +221,7 @@ resource "metal_spot_market_request" "request" {
 
 
 resource "metal_device" "reservation" {
-  for_each                = { for id, value in var.reservations : id => value if ! contains(var.reservation_broken, id) }
+  for_each                = { for id, value in var.reservations : id => value if !contains(var.reservation_broken, id) }
   project_id              = var.project_id
   hostname                = lookup(var.reservation_class_names, each.value.class, each.value.class)
   billing_cycle           = "hourly"
