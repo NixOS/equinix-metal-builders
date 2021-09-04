@@ -5,8 +5,10 @@
     nixpkgs.system = "x86_64-linux";
     imports = [
       ./c2.medium.x86.nix
+      ./c3.medium.x86.nix
       ./m1.xlarge.x86.nix
       ./m2.xlarge.x86.nix
+      ./m3.large.x86.nix
     ];
 
     nix = {
@@ -80,24 +82,24 @@
           makeAbout = true;
           features = [ "big-parallel" ];
         };
+      };
 
-        "m3.large.x86".configuration = {
-          favorability = 80;
-          nix = {
-            maxJobs = 32;
-            buildCores = 2;
-            makeAbout = true;
-          };
+      "m3.large.x86".configuration = {
+        favorability = 80;
+        nix = {
+          maxJobs = 32;
+          buildCores = 2;
+          makeAbout = true;
         };
+      };
 
-        "m3.large.x86--big-parallel".configuration = {
-          favorability = 20;
-          nix = {
-            maxJobs = 2;
-            buildCores = 32;
-            makeAbout = true;
-            features = [ "big-parallel" ];
-          };
+      "m3.large.x86--big-parallel".configuration = {
+        favorability = 20;
+        nix = {
+          maxJobs = 2;
+          buildCores = 32;
+          makeAbout = true;
+          features = [ "big-parallel" ];
         };
       };
     };
