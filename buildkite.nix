@@ -1,4 +1,5 @@
 let
+  channel = "nixpkgs=channel:nixos-unstable-small";
   devices = let
     raw_data = builtins.fromJSON (builtins.readFile ./devices.json);
     is_interesting = device: (
@@ -24,7 +25,7 @@ let
     command = ''
       set -eux
 
-      export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-20.09/nixexprs.tar.xz"
+      export NIX_PATH=${channel}
 
       ./enter-env.sh ./build-${platform}.sh ${sourceSlug { inherit platform; }}
     '';
@@ -47,7 +48,7 @@ let
       ''
         set -eux
 
-        export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-20.09/nixexprs.tar.xz"
+        export NIX_PATH=${channel}
 
         ./enter-env.sh ./drain.sh ${device.id} ${dns_target} ${device.id}@sos.${device.facility.code}.packet.net
       '';
@@ -70,7 +71,7 @@ let
       ''
         set -eux
 
-        export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-20.09/nixexprs.tar.xz"
+        export NIX_PATH=${channel}
 
         ./enter-env.sh ./reboot.sh ${device.id} ${dns_target} ${device.id}@sos.${device.facility.code}.packet.net
       '';
@@ -100,7 +101,7 @@ let
       ''
         set -eux
 
-        export NIX_PATH="nixpkgs=https://nixos.org/channels/nixos-20.09/nixexprs.tar.xz"
+        export NIX_PATH=${channel}
 
         ./enter-env.sh ./restore.sh ${device.id} ${dns_target} ${device.id}@sos.${device.facility.code}.packet.net
       '';
