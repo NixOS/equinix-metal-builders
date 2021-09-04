@@ -19,8 +19,8 @@ with lib;
     # !!! Hack - attributes expected by other modules.
     environment.systemPackages = [ pkgs.grub2_efi ]
       ++ (if pkgs.stdenv.hostPlatform.system == "aarch64-linux"
-          then []
-          else [ pkgs.grub2 pkgs.syslinux ]);
+    then [ ]
+    else [ pkgs.grub2 pkgs.syslinux ]);
 
     fileSystems."/" = {
       fsType = "zfs";
@@ -50,15 +50,15 @@ with lib;
       prepend = [ "${config.system.build.initialRamdisk}/initrd" ];
 
       contents =
-        [ { object = config.system.build.tarStore;
-            symlink = "/nix-store.tar.xz";
-          }
-        ];
+        [{
+          object = config.system.build.tarStore;
+          symlink = "/nix-store.tar.xz";
+        }];
     };
 
     system.build.netbootIpxeScript = pkgs.writeTextDir "netboot.ipxe" ''
       #!ipxe
-      kernel ${pkgs.stdenv.hostPlatform.platform.kernelTarget} init=${config.system.build.toplevel}/init initrd=initrd ${toString config.boot.kernelParams}
+      kernel ${pkgs.stdenv.hostPlatform.linux-kernel.target} init=${config.system.build.toplevel}/init initrd=inpitrd ${toString config.boot.kernelParams}
       initrd initrd
       boot
     '';

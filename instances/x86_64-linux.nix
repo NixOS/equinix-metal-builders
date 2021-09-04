@@ -25,6 +25,25 @@
         };
       };
 
+      "c3.medium.x86".configuration = {
+        favorability = 80;
+        nix = {
+          maxJobs = 32;
+          buildCores = 2;
+          makeAbout = true;
+        };
+      };
+
+      "c3.medium.x86--big-parallel".configuration = {
+        favorability = 20;
+        nix = {
+          maxJobs = 2;
+          buildCores = 32;
+          makeAbout = true;
+          features = [ "big-parallel" ];
+        };
+      };
+
       "m1.xlarge.x86".configuration = {
         favorability = 70;
         nix = {
@@ -33,6 +52,7 @@
           makeAbout = true;
         };
       };
+
       "m1.xlarge.x86--big-parallel".configuration = {
         favorability = 30;
         nix = {
@@ -59,6 +79,25 @@
           buildCores = 48;
           makeAbout = true;
           features = [ "big-parallel" ];
+        };
+
+        "m3.large.x86".configuration = {
+          favorability = 80;
+          nix = {
+            maxJobs = 32;
+            buildCores = 2;
+            makeAbout = true;
+          };
+        };
+
+        "m3.large.x86--big-parallel".configuration = {
+          favorability = 20;
+          nix = {
+            maxJobs = 2;
+            buildCores = 32;
+            makeAbout = true;
+            features = [ "big-parallel" ];
+          };
         };
       };
     };
