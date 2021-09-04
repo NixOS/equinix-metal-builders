@@ -30,7 +30,7 @@
       "c3.medium.x86".configuration = {
         favorability = 80;
         nix = {
-          maxJobs = 32;
+          maxJobs = 24;
           buildCores = 2;
           makeAbout = true;
         };
@@ -40,7 +40,7 @@
         favorability = 20;
         nix = {
           maxJobs = 2;
-          buildCores = 32;
+          buildCores = 24;
           makeAbout = true;
           features = [ "big-parallel" ];
         };
