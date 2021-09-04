@@ -8,7 +8,7 @@
     ];
     initrd = {
       availableKernelModules = [
-        "ahci" "pci_thunder_ecam"
+        "ahci"
       ];
     };
   };
