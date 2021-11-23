@@ -57,6 +57,24 @@
         };
       };
 
+      "c3.large.arm".configuration = {
+        favorability = 50;
+        nix = {
+          maxJobs = 40;
+          buildCores = 2;
+          makeAbout = true;
+        };
+      };
+
+      "c3.large.arm--big-parallel".configuration = {
+        favorability = 50;
+        nix = {
+          maxJobs = 4;
+          buildCores = 20;
+          makeAbout = true;
+        };
+      };
+
       "baremetal_2a5".configuration = {
         favorability = 50;
         nix = {
