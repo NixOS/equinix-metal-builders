@@ -125,6 +125,7 @@ variable "bids" {
     plan  = string
     name  = string # leave as an empty string to use the plan
     url   = string
+    metro = string
   }))
   default = [
     {
@@ -132,24 +133,28 @@ variable "bids" {
       plan  = "c2.large.arm"
       name  = "c2.large.arm--big-parallel"
       url   = "https://netboot.gsc.io/hydra-aarch64-linux/netboot.ipxe"
+      metro = "AM"
     },
     {
       price = 1.98
       plan  = "c2.large.arm"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-aarch64-linux/netboot.ipxe"
+      metro = "AM"
     },
     {
       price = 1.97
       plan  = "c2.large.arm"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-aarch64-linux/netboot.ipxe"
+      metro = "AM"
     },
     {
       price = 1.96
       plan  = "c2.large.arm"
       name  = "c2.large.arm--armv7l"
       url   = "https://netboot.gsc.io/hydra-aarch64-linux/netboot.ipxe"
+      metro = "SV"
     },
 
     {
@@ -157,36 +162,42 @@ variable "bids" {
       plan  = "c3.medium.x86"
       name  = "c3.medium.x86--big-parallel"
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
+      metro = "AM"
     },
     {
       price = 1.99
       plan  = "c3.medium.x86"
       name  = "c3.medium.x86--big-parallel"
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
+      metro = "AM"
     },
     {
       price = 1.98
       plan  = "c3.medium.x86"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
+      metro = "AM"
     },
     {
       price = 1.97
       plan  = "m3.large.x86"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
+      metro = "DA"
     },
     {
       price = 1.96
       plan  = "m3.large.x86"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
+      metro = "DA"
     },
     {
       price = 1.95
       plan  = "m3.large.x86"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
+      metro = "DA"
     },
   ]
 }
@@ -201,7 +212,7 @@ resource "metal_spot_market_request" "request" {
   max_bid_price = each.value.price
   # facilities    = [ "sjc1", "dfw2", "ewr1" ] # todo: add nrt1 and ams1; their spot markets were churning in 2021-09-03
   # metros         = [ "DC", "DA", "SV", "SP", "AM", "FR", "SG", "SV" ]
-  metro = "AM"
+  metro = each.value.metro
   # facilities  = ["ewr1"]
   devices_min = 1
   devices_max = 1
