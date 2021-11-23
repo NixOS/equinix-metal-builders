@@ -6,6 +6,7 @@
     imports = [
       ./c1.large.arm.nix
       ./c2.large.arm.nix
+      ./c3.large.arm.nix
     ];
 
     nix = {
@@ -34,17 +35,17 @@
       };
 
       /*
-      "c2.large.arm--armv7l".configuration = {
+        "c2.large.arm--armv7l".configuration = {
         favorability = 20;
         services.openssh.ports = [ 2200 ];
         packet-nix-builder.armv7.enable = true;
         nix = {
-          maxJobs = 5;
-          buildCores = 2;
-          makeAbout = true;
-          systemTypes = lib.mkForce [ "armv7l-linux" ];
+        maxJobs = 5;
+        buildCores = 2;
+        makeAbout = true;
+        systemTypes = lib.mkForce [ "armv7l-linux" ];
         };
-      };
+        };
       */
 
       "c2.large.arm--big-parallel".configuration = {
