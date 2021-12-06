@@ -123,6 +123,7 @@ variable "bids" {
   type = list(object({
     price = number
     plan  = string
+    metro = string
     name  = string # leave as an empty string to use the plan
     url   = string
     metro = string
@@ -131,6 +132,7 @@ variable "bids" {
     {
       price = 1.99
       plan  = "c2.large.arm"
+      metro = "SV"
       name  = "c2.large.arm--big-parallel"
       url   = "https://netboot.gsc.io/hydra-aarch64-linux/netboot.ipxe"
       metro = "AM"
@@ -138,6 +140,7 @@ variable "bids" {
     {
       price = 1.98
       plan  = "c2.large.arm"
+      metro = "SV"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-aarch64-linux/netboot.ipxe"
       metro = "AM"
@@ -145,6 +148,7 @@ variable "bids" {
     {
       price = 1.97
       plan  = "c2.large.arm"
+      metro = "SV"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-aarch64-linux/netboot.ipxe"
       metro = "AM"
@@ -152,6 +156,7 @@ variable "bids" {
     {
       price = 1.96
       plan  = "c2.large.arm"
+      metro = "SV"
       name  = "c2.large.arm--armv7l"
       url   = "https://netboot.gsc.io/hydra-aarch64-linux/netboot.ipxe"
       metro = "SV"
@@ -160,6 +165,7 @@ variable "bids" {
     {
       price = 2.0
       plan  = "c3.medium.x86"
+      metro = "AM"
       name  = "c3.medium.x86--big-parallel"
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
       metro = "AM"
@@ -167,6 +173,7 @@ variable "bids" {
     {
       price = 1.99
       plan  = "c3.medium.x86"
+      metro = "AM"
       name  = "c3.medium.x86--big-parallel"
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
       metro = "AM"
@@ -174,6 +181,28 @@ variable "bids" {
     {
       price = 1.98
       plan  = "c3.medium.x86"
+      metro = "AM"
+      name  = ""
+      url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
+    },
+    {
+      price = 1.97
+      plan  = "c3.medium.x86"
+      metro = "AM"
+      name  = ""
+      url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
+    },
+    {
+      price = 1.96
+      plan  = "c3.medium.x86"
+      metro = "AM"
+      name  = ""
+      url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
+    },
+    {
+      price = 1.95
+      plan  = "c3.medium.x86"
+      metro = "AM"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
       metro = "AM"
@@ -181,6 +210,7 @@ variable "bids" {
     {
       price = 1.97
       plan  = "m3.large.x86"
+      metro = null
       name  = ""
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
       metro = "DA"
@@ -188,6 +218,7 @@ variable "bids" {
     {
       price = 1.96
       plan  = "m3.large.x86"
+      metro = "SV"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
       metro = "DA"
@@ -195,6 +226,7 @@ variable "bids" {
     {
       price = 1.95
       plan  = "m3.large.x86"
+      metro = "SV"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
       metro = "DA"
