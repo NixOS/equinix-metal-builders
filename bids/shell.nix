@@ -3,7 +3,7 @@ let
 in pkgs.mkShell {
   buildInputs = [
     pkgs.jq
-    (pkgs.terraform_1_0.withPlugins (p: [
+    (pkgs.terraform_1.withPlugins (p: [
       (pkgs.buildGoPackage rec {
         pname = "terraform-provider-metal";
         version = "3.1.0";
