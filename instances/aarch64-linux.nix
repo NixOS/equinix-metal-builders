@@ -84,15 +84,6 @@
           makeAbout = true;
         };
       };
-      "baremetal_2a5--big-parallel".configuration = {
-        favorability = 50;
-        nix = {
-          maxJobs = 2;
-          buildCores = 22;
-          makeAbout = true;
-          features = [ "big-parallel" ];
-        };
-      };
     };
   };
 }
