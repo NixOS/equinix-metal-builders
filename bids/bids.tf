@@ -41,10 +41,6 @@ variable "reservations" {
       "facility" : "c9dcbd06-6797-4096-b648-1be16dd5d833",
       "class" : "baremetal_2a5"
     },
-    "0a768cab-6e80-4012-ac79-91555ee9bad4" : {
-      "facility" : "e1e9c52e-a0bc-4117-b996-0fc94843ea09",
-      "class" : "baremetal_2a5"
-    },
     "86a5c1f1-453a-4719-bd93-8427272c4073" : {
       "facility" : "c9dcbd06-6797-4096-b648-1be16dd5d833",
       "class" : "baremetal_2a5"
@@ -53,20 +49,12 @@ variable "reservations" {
       "facility" : "c9dcbd06-6797-4096-b648-1be16dd5d833",
       "class" : "baremetal_2a5"
     },
-    "68ead1e9-a310-4744-b90b-d06d5d31afc3" : {
-      "facility" : "e1e9c52e-a0bc-4117-b996-0fc94843ea09",
-      "class" : "baremetal_2a5"
-    },
     "e8977920-13c6-484d-b4f4-92426583cad0" : {
       "facility" : "c9dcbd06-6797-4096-b648-1be16dd5d833",
       "class" : "baremetal_2a5"
     },
     "de28365b-1bcd-492b-9f91-f775327f7425" : {
       "facility" : "c9dcbd06-6797-4096-b648-1be16dd5d833",
-      "class" : "baremetal_2a5"
-    },
-    "6b25844f-aaa8-4e50-94a3-6b175077b90c" : {
-      "facility" : "e1e9c52e-a0bc-4117-b996-0fc94843ea09",
       "class" : "baremetal_2a5"
     },
     "533a5afa-a56e-4766-ab7e-fdc236d24449" : {
@@ -171,7 +159,21 @@ variable "bids" {
     {
       price = 1.97
       plan  = "c3.medium.x86"
-      metro = "AM"
+      metro = "NY"
+      name  = ""
+      url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
+    },
+    {
+      price = 1.96
+      plan  = "c3.medium.x86"
+      metro = "NY"
+      name  = ""
+      url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
+    },
+    {
+      price = 1.95
+      plan  = "c3.medium.x86"
+      metro = "SV"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
     },
