@@ -136,10 +136,9 @@ variable "bids" {
     {
       price = 2.0
       plan  = "c3.large.arm"
-      metro = "SV"
+      metro = "DA"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-aarch64-linux/netboot.ipxe"
-      metro = "SV"
     },
     {
       price = 2.0
@@ -147,7 +146,6 @@ variable "bids" {
       metro = "AM"
       name  = "c3.medium.x86--big-parallel"
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
-      metro = "AM"
     },
     {
       price = 1.98
