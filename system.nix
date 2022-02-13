@@ -13,6 +13,12 @@ let
       ${pkgs.pciutils}/bin/lspci -nnk || true
       ${pkgs.kmod}/bin/lsmod || true
 
+      while [ $(${pkgs.utillinux}/bin/lsblk -d -e 1,7,11,230 -o NAME -n | ${pkgs.busybox}/bin/wc -l) -eq 0 ]; do
+        echo "Waiting for some devices ..."
+        ${pkgs.utillinux}/bin/lsblk -d -e 1,7,11,230 -o NAME -n
+        sleep 1
+      done
+
       ${pkgs.utillinux}/bin/lsblk -d -e 1,7,11,230 -o NAME -n \
         | ${pkgs.busybox}/bin/sed -e "s#^#/dev/#" \
         | ${pkgs.busybox}/bin/xargs ${pkgs.zfs}/bin/zpool \
