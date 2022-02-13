@@ -1,5 +1,7 @@
 #!/bin/sh
 
+export NIX_PATH=nixpkgs=channel:nixos-unstable-small
+
 cfgOpt() {
     touch build.cfg
     ret=$(awk '$1 == "'"$1"'" { print $2; }' build.cfg)

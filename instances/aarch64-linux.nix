@@ -4,7 +4,6 @@
   hardware = { lib, pkgs, ... }: {
     nixpkgs.system = "aarch64-linux";
     imports = [
-      ./c1.large.arm.nix
       ./c2.large.arm.nix
       ./c3.large.arm.nix
     ];
@@ -16,15 +15,6 @@
     };
 
     specialisation = {
-      "c1.large.arm".configuration = {
-        favorability = 100;
-        nix = {
-          maxJobs = 32;
-          buildCores = 3;
-          makeAbout = true;
-        };
-      };
-
       "c2.large.arm".configuration = {
         favorability = 50;
         nix = {
