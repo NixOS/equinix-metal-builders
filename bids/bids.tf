@@ -137,7 +137,7 @@ variable "bids" {
       price = 2.0
       plan  = "c3.large.arm"
       metro = "DA"
-      name  = ""
+      name  = "c3.large.arm--big-parallel"
       url   = "https://netboot.gsc.io/hydra-aarch64-linux/netboot.ipxe"
     },
     {
