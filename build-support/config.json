@@ -13,6 +13,15 @@
             "features": ["kvm","nixos-test","big-parallel"],
             "mandatory_features": []
         },
+        "c3.large.arm": {
+            "user": "root",
+            "system_types": ["aarch64-linux"],
+            "ssh_key": "./infra-key.private",
+            "max_jobs": 5,
+            "speed_factor": 2,
+            "features": ["kvm","nixos-test","big-parallel"],
+            "mandatory_features": []
+        },
         "c2.medium.x86": {
             "user": "root",
             "system_types": ["x86_64-linux", "i686-linux"],
