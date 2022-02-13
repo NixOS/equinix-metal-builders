@@ -63,6 +63,7 @@
           maxJobs = 4;
           buildCores = 20;
           makeAbout = true;
+          features = [ "big-parallel" ];
         };
       };
 
