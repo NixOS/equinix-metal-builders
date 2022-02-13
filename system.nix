@@ -99,9 +99,10 @@ in
       keyFile = "/etc/ssh/ssh_host_ed25519_key.pub";
     }];
 
-    system.extraSystemBuilderCmds = if config.favorability != null then ''
-      echo ${toString config.favorability} > $out/favorability
-    '' else "";
+    system.extraSystemBuilderCmds =
+      if config.favorability != null then ''
+        echo ${toString config.favorability} > $out/favorability
+      '' else "";
 
     systemd.services.specialise = {
       enable = ! config.nix.makeAbout;
@@ -119,25 +120,28 @@ in
         X-StopOnReconfiguration = false;
         X-StopOnRemoval = false;
       };
-      script = let
-        specialise = pkgs.runCommand "specialise.py" {
-          buildInputs = with pkgs; [ python3 python3Packages.mypy python3Packages.black ];
-        } ''
-          cp ${./specialise.py} ./specialise.py
-          patchShebangs ./specialise.py
-          mypy ./specialise.py
-          black --check --diff ./specialise.py
-          mv ./specialise.py $out
+      script =
+        let
+          specialise = pkgs.runCommand "specialise.py"
+            {
+              buildInputs = with pkgs; [ python3 python3Packages.mypy python3Packages.black ];
+            } ''
+            cp ${./specialise.py} ./specialise.py
+            patchShebangs ./specialise.py
+            mypy ./specialise.py
+            black --check --diff ./specialise.py
+            mv ./specialise.py $out
+          '';
+        in
+        ''
+          set -eux
+          set -o pipefail
+
+          class=$(curl https://metadata.packet.net/metadata | jq -r .class)
+          name=$(curl https://metadata.packet.net/metadata | jq -r .hostname)
+
+          exec python3 ${specialise} "$class" "$name" "/run/current-system/specialisation"
         '';
-      in ''
-        set -eux
-        set -o pipefail
-
-        class=$(curl https://metadata.packet.net/metadata | jq -r .class)
-        name=$(curl https://metadata.packet.net/metadata | jq -r .hostname)
-
-        exec python3 ${specialise} "$class" "$name" "/run/current-system/specialisation"
-      '';
     };
 
     systemd.services.upload-ssh-keys = {
@@ -155,57 +159,59 @@ in
         X-StopOnReconfiguration = false;
         X-StopOnRemoval = false;
       };
-      script = let
-        cfg = config.packet-nix-builder.hostKeys;
-      in ''
-        set -eux
-        set -o pipefail
+      script =
+        let
+          cfg = config.packet-nix-builder.hostKeys;
+        in
+        ''
+          set -eux
+          set -o pipefail
 
-        root_url=$(curl https://metadata.packet.net/metadata | jq -r .phone_home_url | rev | cut -d '/' -f2- | rev)
-        url="$root_url/events"
+          root_url=$(curl https://metadata.packet.net/metadata | jq -r .phone_home_url | rev | cut -d '/' -f2- | rev)
+          url="$root_url/events"
 
-        tell() {
-          data=$(
-            jq -n '$ARGS.named | .code |= tonumber' \
-             --arg state "$1" \
-             --arg code "$2" \
-             --arg message "$3"
+          tell() {
+            data=$(
+              jq -n '$ARGS.named | .code |= tonumber' \
+               --arg state "$1" \
+               --arg code "$2" \
+               --arg message "$3"
+            )
+
+            curl -v -X POST -d "$data" "$url"
+          }
+
+          read_host_key() {
+            if [ ! -e "$3" ]; then
+              echo "Missing key file: '$3'" >&2
+              exit 1
+            fi
+
+            jq -n '$ARGS.named | .port |= tonumber | .key |= rtrimstr("\n")' \
+              --arg system "$1" \
+              --arg port "$2" \
+              --rawfile key "$3"
+          }
+
+          test -f /run/current-system/about.json
+          ${lib.concatMapStringsSep "\n" ({ system, port, keyFile, ... }: ''
+            test -f ${lib.escapeShellArgs [ keyFile ]}
+            test "x$(cat ${lib.escapeShellArgs [ keyFile ]})" != "x"
+          '') cfg}
+
+
+          message=$(
+            (
+              set -e
+              ${lib.concatMapStringsSep "\n" ({ system, port, keyFile, ... }: ''
+                read_host_key ${lib.escapeShellArgs [ system (toString port) keyFile ]}
+              '') cfg}
+            ) | jq --slurp
           )
 
-          curl -v -X POST -d "$data" "$url"
-        }
-
-        read_host_key() {
-          if [ ! -e "$3" ]; then
-            echo "Missing key file: '$3'" >&2
-            exit 1
-          fi
-
-          jq -n '$ARGS.named | .port |= tonumber | .key |= rtrimstr("\n")' \
-            --arg system "$1" \
-            --arg port "$2" \
-            --rawfile key "$3"
-        }
-
-        test -f /run/current-system/about.json
-        ${lib.concatMapStringsSep "\n" ({ system, port, keyFile, ... }: ''
-          test -f ${lib.escapeShellArgs [ keyFile ]}
-          test "x$(cat ${lib.escapeShellArgs [ keyFile ]})" != "x"
-        '') cfg}
-
-
-        message=$(
-          (
-            set -e
-            ${lib.concatMapStringsSep "\n" ({ system, port, keyFile, ... }: ''
-              read_host_key ${lib.escapeShellArgs [ system (toString port) keyFile ]}
-            '') cfg}
-          ) | jq --slurp
-        )
-
-        tell succeeded 1001 "$message"
-        tell succeeded 1002 "$(cat /run/current-system/about.json)"
-      '';
+          tell succeeded 1001 "$message"
+          tell succeeded 1002 "$(cat /run/current-system/about.json)"
+        '';
     };
   };
 }
