@@ -61,7 +61,8 @@
         favorability = 50;
         nix = {
           maxJobs = 4;
-          buildCores = 20;
+          # cores is used for make's -j and -l, meaning we leave a lot of performance on the table by dividing 80 cores by 4
+          buildCores = 80;
           makeAbout = true;
           features = [ "big-parallel" ];
         };
