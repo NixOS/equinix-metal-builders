@@ -51,7 +51,7 @@ echo "        ... down!"
 
 echo "--- waiting for ${id} to come back up"
 
-keyscans_remaining=1800
+keyscans_remaining=540
 
 while [ $(ssh-keyscan "$host" 2> /dev/null  | wc -l) -eq 0 ]; do
     echo -n "."
