@@ -31,7 +31,7 @@ delete() {
         --header 'Accept: application/json' \
         --header "X-Auth-Token: $PACKET_AUTH_TOKEN" \
         --fail \
-        "https://api.packet.net/devices/${1}/actions"
+        "https://api.packet.net/devices/${1}"
 }
 
 
