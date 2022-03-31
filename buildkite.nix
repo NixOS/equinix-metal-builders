@@ -73,7 +73,10 @@ let
 
         export NIX_PATH=${channel}
 
-        ./enter-env.sh ./reboot.sh ${device.id} ${dns_target} ${device.id}@sos.${device.facility.code}.packet.net
+        if ! ./enter-env.sh ./reboot.sh ${device.id} ${dns_target} ${device.id}@sos.${device.facility.code}.packet.net; then
+          cat ./buildkite-terminate.yml | sed -e 's/DEVICE_ID/${device.id}/g' > terminate.yml
+          buildkite-agent pipeline upload terminate.yml
+        fi
       '';
 
     inherit env;

@@ -1,0 +1,8 @@
+steps:
+  - label: "":metal: Terminating DEVICE_ID"
+    command:
+      - ./enter-env.sh ./terminate DEVICE_ID"
+    env:
+      NIX_PATH: nixpkgs=channel:nixos-unstable-small
+    agents:
+      nixos-foundation-netboot: true
