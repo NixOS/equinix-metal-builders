@@ -1,5 +1,5 @@
 steps:
-  - label: "":metal: Terminating DEVICE_ID"
+  - label: ":metal: Terminating DEVICE_ID"
     command:
       - ./enter-env.sh ./terminate.sh DEVICE_ID"
     env:
