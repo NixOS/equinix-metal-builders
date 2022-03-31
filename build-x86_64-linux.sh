@@ -1,5 +1,5 @@
 #!/usr/bin/env nix-shell
-#!nix-shell -p gawk gnused -i bash
+#!nix-shell -i bash ./shell.nix
 
 set -eu
 set -o pipefail
