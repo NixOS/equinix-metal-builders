@@ -9,7 +9,7 @@ terraform {
 
   required_providers {
     metal = {
-      source = "nixpkgs/metal"
+      source = "equinix/metal"
     }
   }
 }
