@@ -1,7 +1,7 @@
 steps:
   - label: ":metal: Terminating DEVICE_ID"
     command:
-      - ./enter-env.sh ./terminate.sh DEVICE_ID"
+      - ./enter-env.sh ./terminate.sh DEVICE_ID
     env:
       NIX_PATH: nixpkgs=channel:nixos-unstable-small
     agents:
