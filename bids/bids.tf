@@ -51,7 +51,7 @@ variable "reservation_class_urls" {
 variable "reservation_facility_names" {
   type = map(string)
   default = {
-    # Example: "c9dcbd06-6797-4096-b648-1be16dd5d833" = "dfw2",
+    "c9dcbd06-6797-4096-b648-1be16dd5d833" = "dfw2",
   }
 }
 
