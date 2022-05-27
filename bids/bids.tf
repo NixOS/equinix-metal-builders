@@ -76,24 +76,21 @@ variable "bids" {
     metro = string
     name  = string # leave as an empty string to use the plan
     url   = string
-    metro = string
   }))
   default = [
     {
       price = 1.99
       plan  = "c2.large.arm"
-      metro = "SV"
+      metro = "AM"
       name  = "c2.large.arm--big-parallel"
       url   = "https://netboot.gsc.io/hydra-aarch64-linux/netboot.ipxe"
-      metro = "AM"
     },
     {
       price = 1.98
       plan  = "c2.large.arm"
-      metro = "SV"
+      metro = "AM"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-aarch64-linux/netboot.ipxe"
-      metro = "AM"
     },
     {
       price = 2.0
@@ -154,10 +151,9 @@ variable "bids" {
     {
       price = 1.97
       plan  = "m3.large.x86"
-      metro = null
+      metro = "DA"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
-      metro = "DA"
     },
   ]
 }
