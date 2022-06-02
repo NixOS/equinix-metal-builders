@@ -29,14 +29,6 @@ variable "reservations" {
     class    = string
   }))
   default = {
-    "de28365b-1bcd-492b-9f91-f775327f7425" : {
-      "facility" : "c9dcbd06-6797-4096-b648-1be16dd5d833",
-      "class" : "baremetal_2a5"
-    },
-    "6f21cbbd-35d9-4426-895b-8c8e218e339a" : {
-      "facility" : "c9dcbd06-6797-4096-b648-1be16dd5d833",
-      "class" : "baremetal_2a5"
-    },
   }
 }
 
@@ -78,20 +70,6 @@ variable "bids" {
     url   = string
   }))
   default = [
-    {
-      price = 1.99
-      plan  = "c2.large.arm"
-      metro = "AM"
-      name  = "c2.large.arm--big-parallel"
-      url   = "https://netboot.gsc.io/hydra-aarch64-linux/netboot.ipxe"
-    },
-    {
-      price = 1.98
-      plan  = "c2.large.arm"
-      metro = "AM"
-      name  = ""
-      url   = "https://netboot.gsc.io/hydra-aarch64-linux/netboot.ipxe"
-    },
     {
       price = 2.0
       plan  = "c3.large.arm"
