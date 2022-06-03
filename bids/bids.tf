@@ -85,7 +85,21 @@ variable "bids" {
       url   = "https://netboot.gsc.io/hydra-aarch64-linux/netboot.ipxe"
     },
     {
+      price = 1.8
+      plan  = "c3.large.arm"
+      metro = "DA"
+      name  = "c3.large.arm"
+      url   = "https://netboot.gsc.io/hydra-aarch64-linux/netboot.ipxe"
+    },
+    {
       price = 2.0
+      plan  = "c3.medium.x86"
+      metro = "AM"
+      name  = "c3.medium.x86--big-parallel"
+      url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
+    },
+    {
+      price = 1.99
       plan  = "c3.medium.x86"
       metro = "AM"
       name  = "c3.medium.x86--big-parallel"
@@ -116,13 +130,6 @@ variable "bids" {
       price = 1.95
       plan  = "c3.medium.x86"
       metro = "AM"
-      name  = ""
-      url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
-    },
-    {
-      price = 1.94
-      plan  = "c3.medium.x86"
-      metro = "NY"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
     },
