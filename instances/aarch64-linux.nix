@@ -4,7 +4,6 @@
   hardware = { lib, pkgs, ... }: {
     nixpkgs.system = "aarch64-linux";
     imports = [
-      ./c2.large.arm.nix
       ./c3.large.arm.nix
     ];
 
@@ -15,39 +14,6 @@
     };
 
     specialisation = {
-      "c2.large.arm".configuration = {
-        favorability = 50;
-        nix = {
-          maxJobs = 16;
-          buildCores = 2;
-          makeAbout = true;
-        };
-      };
-
-      /*
-        "c2.large.arm--armv7l".configuration = {
-        favorability = 20;
-        services.openssh.ports = [ 2200 ];
-        packet-nix-builder.armv7.enable = true;
-        nix = {
-        maxJobs = 5;
-        buildCores = 2;
-        makeAbout = true;
-        systemTypes = lib.mkForce [ "armv7l-linux" ];
-        };
-        };
-      */
-
-      "c2.large.arm--big-parallel".configuration = {
-        favorability = 30;
-        nix = {
-          maxJobs = 2;
-          buildCores = 32;
-          makeAbout = true;
-          features = [ "big-parallel" ];
-        };
-      };
-
       "c3.large.arm".configuration = {
         favorability = 50;
         nix = {
@@ -65,15 +31,6 @@
           buildCores = 80;
           makeAbout = true;
           features = [ "big-parallel" ];
-        };
-      };
-
-      "baremetal_2a5".configuration = {
-        favorability = 50;
-        nix = {
-          maxJobs = 22;
-          buildCores = 2;
-          makeAbout = true;
         };
       };
     };

@@ -4,10 +4,7 @@
   hardware = { pkgs, ... }: {
     nixpkgs.system = "x86_64-linux";
     imports = [
-      ./c2.medium.x86.nix
       ./c3.medium.x86.nix
-      ./m1.xlarge.x86.nix
-      ./m2.xlarge.x86.nix
       ./m3.large.x86.nix
     ];
 
@@ -18,15 +15,6 @@
     };
 
     specialisation = {
-      "c2.medium.x86".configuration = {
-        favorability = 100;
-        nix = {
-          maxJobs = 24;
-          buildCores = 2;
-          makeAbout = true;
-        };
-      };
-
       "c3.medium.x86".configuration = {
         favorability = 80;
         nix = {
@@ -41,44 +29,6 @@
         nix = {
           maxJobs = 2;
           buildCores = 24;
-          makeAbout = true;
-          features = [ "big-parallel" ];
-        };
-      };
-
-      "m1.xlarge.x86".configuration = {
-        favorability = 70;
-        nix = {
-          maxJobs = 24;
-          buildCores = 2;
-          makeAbout = true;
-        };
-      };
-
-      "m1.xlarge.x86--big-parallel".configuration = {
-        favorability = 30;
-        nix = {
-          maxJobs = 1;
-          buildCores = 48;
-          makeAbout = true;
-          features = [ "big-parallel" ];
-        };
-      };
-
-      "m2.xlarge.x86".configuration = {
-        favorability = 80;
-        nix = {
-          maxJobs = 28;
-          buildCores = 2;
-          makeAbout = true;
-        };
-      };
-
-      "m2.xlarge.x86--big-parallel".configuration = {
-        favorability = 20;
-        nix = {
-          maxJobs = 1;
-          buildCores = 48;
           makeAbout = true;
           features = [ "big-parallel" ];
         };
