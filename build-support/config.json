@@ -22,6 +22,21 @@
                 "big-parallel"
             ],
             "mandatory_features": []
+        },
+        "c3.large.arm64": {
+            "user": "root",
+            "system_types": [
+                "aarch64-linux"
+            ],
+            "ssh_key": "./infra-key.private",
+            "max_jobs": 5,
+            "speed_factor": 2,
+            "features": [
+                "kvm",
+                "nixos-test",
+                "big-parallel"
+            ],
+            "mandatory_features": []
         }
     },
     "name_overrides": {}
