@@ -137,10 +137,10 @@ in
           set -eux
           set -o pipefail
 
-          class=$(curl https://metadata.packet.net/metadata | jq -r .class)
+          plan=$(curl https://metadata.packet.net/metadata | jq -r .plan)
           name=$(curl https://metadata.packet.net/metadata | jq -r .hostname)
 
-          exec python3 ${specialise} "$class" "$name" "/run/current-system/specialisation"
+          exec python3 ${specialise} "$plan" "$name" "/run/current-system/specialisation"
         '';
     };
 
