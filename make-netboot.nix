@@ -3,7 +3,7 @@ let
   pkgs = import <nixpkgs> { system = buildSystem; };
   makeNetboot = config:
     let
-      config_evaled = import "${pkgs.path}/nixos" {
+      config_evaled = import (pkgs.path + "/nixos") {
         configuration = { pkgs, ... }: {
           imports = [ config ];
 
