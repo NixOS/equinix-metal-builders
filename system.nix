@@ -1,42 +1,4 @@
 { config, pkgs, lib, ... }:
-let
-  post-device-cmds = pkgs.writeScript "post-device-commands"
-    ''
-      #!/bin/sh
-
-      set -eux
-      set -o pipefail
-
-      ${pkgs.systemd}/bin/udevadm settle
-
-      ${pkgs.utillinux}/bin/lsblk --output-all || true
-      ${pkgs.pciutils}/bin/lspci -nnk || true
-      ${pkgs.kmod}/bin/lsmod || true
-
-      while [ $(${pkgs.utillinux}/bin/lsblk -d -e 1,7,11,230 -o NAME -n | ${pkgs.busybox}/bin/wc -l) -eq 0 ]; do
-        echo "Waiting for some devices ..."
-        ${pkgs.utillinux}/bin/lsblk -d -e 1,7,11,230 -o NAME -n
-        sleep 1
-      done
-
-      ${pkgs.utillinux}/bin/lsblk -d -e 1,7,11,230 -o NAME -n \
-        | ${pkgs.busybox}/bin/sed -e "s#^#/dev/#" \
-        | ${pkgs.busybox}/bin/xargs ${pkgs.zfs}/bin/zpool \
-            create -f \
-                -O sync=disabled \
-                -O mountpoint=none \
-                -O atime=off \
-                -O compression=lz4 \
-                -O xattr=sa \
-                -O acltype=posixacl \
-                -O relatime=on \
-                -o ashift=12 \
-                rpool
-
-      ${pkgs.zfs}/bin/zfs create -o mountpoint=legacy rpool/root
-
-    '';
-in
 {
   options = {
     favorability = lib.mkOption {
@@ -66,9 +28,6 @@ in
   };
 
   config = {
-    boot.supportedFilesystems = [ "zfs" ];
-    boot.initrd.postDeviceCommands = "${post-device-cmds}";
-
     hardware.enableAllFirmware = true;
 
     systemd.services.metadata-setup-ipv6 = {
