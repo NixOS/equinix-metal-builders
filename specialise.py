@@ -64,4 +64,4 @@ for option_range in option_ranges:
 
 if selected is not None:
     program = f"{selected}/bin/switch-to-configuration"
-    os.execv(program, [program, "switch"])
+    os.execv(program, [program, "test"])
