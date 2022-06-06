@@ -51,7 +51,7 @@ let
             device = "/dev/bogus";
             fsType = "ext4";
           };
-          boot.loader.grub.devices = [ "/dev/bogus" ];
+          boot.loader.grub.enable = false;
 
           boot.initrd.availableKernelModules = [ "virtio_net" "virtio_pci" "virtio_mmio" "virtio_blk" "virtio_scsi" "9p" "9pnet_virtio" ];
           boot.initrd.kernelModules = [ "virtio_balloon" "virtio_console" "virtio_rng" ];
