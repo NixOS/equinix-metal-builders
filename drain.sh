@@ -66,10 +66,15 @@ sos=$3
 
 drain "${id}"
 echo "Draining builds ..."
+
+starttime=$(date +%s)
 while
     current=$(current_jobs "$host")
     printf "%s\t%s\n" "$(date)" "$current"
-    [ "$current" -gt 0 ]
+    
+    now=$(date +%s)
+    duration=$((now - starttime))
+    [ "$current" -gt 0 ] || [ "$duration" -gt 43200 ] # 12 hours
 do
     sleep 1
 done
