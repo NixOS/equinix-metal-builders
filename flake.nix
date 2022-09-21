@@ -5,9 +5,13 @@
       url = "github:DeterminateSystems/nix-netboot-serve/grahamc-patch-1";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    flake-compat = {
+      url = "github:edolstra/flake-compat";
+      flake = false;
+    };
   };
 
-  outputs = { self, nixpkgs, nix-netboot-serve, flake-utils }:
+  outputs = { self, nixpkgs, nix-netboot-serve, flake-utils, flake-compat }:
     let
       mkNixOS = system: module:
         (nixpkgs.lib.nixosSystem {
