@@ -11,6 +11,10 @@ terraform {
     metal = {
       source = "equinix/metal"
     }
+
+    equinix = {
+      source = "equinix/equinix"
+    }
   }
 }
 
@@ -21,44 +25,6 @@ variable "tags" {
 
 variable "project_id" {
   default = "86d5d066-b891-4608-af55-a481aa2c0094"
-}
-
-variable "reservations" {
-  type = map(object({ # reservation ID is the key
-    facility = string
-    class    = string
-  }))
-  default = {
-  }
-}
-
-variable "reservation_class_urls" {
-  type = map(string)
-  default = {
-    "baremetal_2a5" = "https://netboot.gsc.io/hydra-aarch64-linux/netboot.ipxe"
-    "c2.large.arm"  = "https://netboot.gsc.io/hydra-aarch64-linux/netboot.ipxe"
-  }
-}
-
-variable "reservation_facility_names" {
-  type = map(string)
-  default = {
-    "c9dcbd06-6797-4096-b648-1be16dd5d833" = "dfw2",
-  }
-}
-
-# Reservations where the underlying hardware is probably broken
-variable "reservation_broken" {
-  type = list(string)
-  default = [
-  ]
-}
-
-variable "reservation_class_names" {
-  type = map(string)
-  default = {
-    "baremetal_2a5" = "baremetal-2a5" # _'s not allowed in hostnames
-  }
 }
 
 variable "bids" {
@@ -147,7 +113,7 @@ locals {
   named_bids = { for bid in var.bids : "${bid.plan}--${bid.name}--${bid.price}" => bid }
 }
 
-resource "metal_spot_market_request" "request" {
+resource "equinix_metal_spot_market_request" "request" {
   for_each      = local.named_bids
   project_id    = var.project_id
   max_bid_price = each.value.price
@@ -169,29 +135,16 @@ resource "metal_spot_market_request" "request" {
     user_ssh_keys    = []
     tags             = concat(var.tags, ["hydra"])
   }
-}
 
+  provisioner "local-exec" {
+    when = destroy
+    on_failure = continue
+    command = "../drain-spot-bid.sh ${self.id}"
+  }
 
-resource "metal_device" "reservation" {
-  for_each                = { for id, value in var.reservations : id => value if !contains(var.reservation_broken, id) }
-  project_id              = var.project_id
-  hostname                = lookup(var.reservation_class_names, each.value.class, each.value.class)
-  billing_cycle           = "hourly"
-  operating_system        = "custom_ipxe"
-  always_pxe              = true
-  plan                    = each.value.class
-  facilities              = [var.reservation_facility_names[each.value.facility]]
-  hardware_reservation_id = each.key
-
-  ipxe_script_url                  = var.reservation_class_urls[each.value.class]
-  project_ssh_key_ids              = []
-  tags                             = concat(var.tags, ["hydra"])
-  wait_for_reservation_deprovision = true
-
-  lifecycle {
-    ignore_changes = [
-      tags
-    ]
+  provisioner "local-exec" {
+    when = destroy
+    on_failure = continue
+    command = "../terminate-spot-bid.sh ${self.id}"
   }
 }
-
