@@ -40,11 +40,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1663726712,
-        "narHash": "sha256-gcO7XJiqk2tYn4pDAiEQNXY46+u8leuFAiHajmY3DOo=",
+        "lastModified": 1663727390,
+        "narHash": "sha256-V7mxcr+zkgTMHv97/chYh6YVO1SSrKa0M73HdTkQVMI=",
         "owner": "DeterminateSystems",
         "repo": "nix-netboot-serve",
-        "rev": "0c7ababa3d6f5d8c412cda1e5d7c65b048c85e89",
+        "rev": "611bf205d9e61bad39f3d542a70cd45dd8fb2ad3",
         "type": "github"
       },
       "original": {
