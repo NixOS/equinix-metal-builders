@@ -11,6 +11,10 @@ terraform {
     metal = {
       source = "equinix/metal"
     }
+
+    equinix = {
+      source = "equinix/equinix"
+    }
   }
 }
 
@@ -147,7 +151,7 @@ locals {
   named_bids = { for bid in var.bids : "${bid.plan}--${bid.name}--${bid.price}" => bid }
 }
 
-resource "metal_spot_market_request" "request" {
+resource "equinix_metal_spot_market_request" "request" {
   for_each      = local.named_bids
   project_id    = var.project_id
   max_bid_price = each.value.price
