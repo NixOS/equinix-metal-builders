@@ -6,7 +6,7 @@ let
   about = pkgs.writeText "about.json" (builtins.toJSON {
     features = config.nix.features;
     system_types = config.nix.systemTypes;
-    max_jobs = config.nix.maxJobs;
+    max_jobs = config.nix.settings.max-jobs;
   });
 in
 {

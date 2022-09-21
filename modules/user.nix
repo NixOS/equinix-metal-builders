@@ -11,13 +11,14 @@ let
       environment = concatStringsSep " " [
         "NIX_SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
       ];
-    in "command=\"${environment} ${config.nix.package}/bin/nix-store --serve --write\" ${key}";
+    in
+    "command=\"${environment} ${config.nix.package}/bin/nix-store --serve --write\" ${key}";
 in
 {
   security.sudo.wheelNeedsPassword = false;
   services = {
     openssh = {
-      challengeResponseAuthentication = false;
+      kbdInteractiveAuthentication = false;
       passwordAuthentication = false;
     };
   };

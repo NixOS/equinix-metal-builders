@@ -21,10 +21,10 @@
 
 
             module
-            ./user.nix
-            ./services.nix
-            ./nix.nix
-            ./system.nix
+            ./modules/user.nix
+            ./modules/services.nix
+            ./modules/nix.nix
+            ./modules/system.nix
 
             {
               system.stateVersion = "22.11";
@@ -42,8 +42,8 @@
 
         nix = {
           systemTypes = [ "x86_64-linux" "i686-linux" ];
-          maxJobs = 24;
-          buildCores = 2;
+          settings.max-jobs = 24;
+          settings.cores = 2;
         };
       };
 
@@ -53,8 +53,8 @@
         nix = {
           features = [ "big-parallel" ];
           systemTypes = [ "x86_64-linux" "i686-linux" ];
-          maxJobs = 2;
-          buildCores = 24;
+          settings.max-jobs = 2;
+          settings.cores = 24;
         };
       };
 
@@ -63,8 +63,8 @@
 
         nix = {
           systemTypes = [ "x86_64-linux" "i686-linux" ];
-          maxJobs = 2;
-          buildCores = 24;
+          settings.max-jobs = 2;
+          settings.cores = 24;
         };
       };
 
@@ -74,8 +74,8 @@
         nix = {
           features = [ "big-parallel" ];
           systemTypes = [ "x86_64-linux" "i686-linux" ];
-          maxJobs = 2;
-          buildCores = 24;
+          settings.max-jobs = 2;
+          settings.cores = 24;
         };
       };
 
@@ -84,8 +84,8 @@
 
         nix = {
           systemTypes = [ "aarch64-linux" ];
-          maxJobs = 40;
-          buildCores = 2;
+          settings.max-jobs = 40;
+          settings.cores = 2;
         };
       };
 
@@ -95,8 +95,8 @@
         nix = {
           features = [ "big-parallel" ];
           systemTypes = [ "aarch64-linux" ];
-          maxJobs = 4;
-          buildCores = 80;
+          settings.max-jobs = 4;
+          settings.cores = 80;
         };
       };
 
