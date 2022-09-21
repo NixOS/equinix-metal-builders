@@ -1,10 +1,6 @@
 { config, pkgs, lib, ... }:
 {
   options = {
-    favorability = lib.mkOption {
-      type = lib.types.nullOr lib.types.int;
-      default = null;
-    };
     packet-nix-builder.hostKeys = lib.mkOption {
       type = lib.types.listOf (lib.types.submodule {
         options = {
@@ -31,7 +27,6 @@
     hardware.enableAllFirmware = true;
 
     systemd.services.metadata-setup-ipv6 = {
-      enable = ! config.nix.makeAbout;
       wantedBy = [ "multi-user.target" ];
       path = with pkgs; [ iproute curl jq ];
       serviceConfig = {
@@ -57,51 +52,6 @@
       port = builtins.head config.services.openssh.ports;
       keyFile = "/etc/ssh/ssh_host_ed25519_key.pub";
     }];
-
-    system.extraSystemBuilderCmds =
-      if config.favorability != null then ''
-        echo ${toString config.favorability} > $out/favorability
-      '' else "";
-
-    systemd.services.specialise = {
-      enable = ! config.nix.makeAbout;
-      wantedBy = [ "multi-user.target" ];
-      path = with pkgs; [ python3 utillinux curl jq ];
-      serviceConfig = {
-        Type = "simple";
-        Restart = "on-failure";
-        RestartSec = "5s";
-      };
-      unitConfig = {
-        X-ReloadIfChanged = false;
-        X-RestartIfChanged = false;
-        X-StopIfChanged = false;
-        X-StopOnReconfiguration = false;
-        X-StopOnRemoval = false;
-      };
-      script =
-        let
-          specialise = pkgs.runCommand "specialise.py"
-            {
-              buildInputs = with pkgs; [ python3 python3Packages.mypy python3Packages.black ];
-            } ''
-            cp ${./specialise.py} ./specialise.py
-            patchShebangs ./specialise.py
-            mypy ./specialise.py
-            black --check --diff ./specialise.py
-            mv ./specialise.py $out
-          '';
-        in
-        ''
-          set -eux
-          set -o pipefail
-
-          plan=$(curl https://metadata.packet.net/metadata | jq -r .plan)
-          name=$(curl https://metadata.packet.net/metadata | jq -r .hostname)
-
-          exec python3 ${specialise} "$plan" "$name" "/run/current-system/specialisation"
-        '';
-    };
 
     systemd.services.upload-ssh-keys = {
       wantedBy = [ "multi-user.target" ];
