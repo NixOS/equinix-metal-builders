@@ -169,6 +169,18 @@ resource "metal_spot_market_request" "request" {
     user_ssh_keys    = []
     tags             = concat(var.tags, ["hydra"])
   }
+
+  provisioner "local-exec" {
+    when = destroy
+    on_failure = continue
+    command = "../drain-spot-bid.sh ${self.id}"
+  }
+
+  provisioner "local-exec" {
+    when = destroy
+    on_failure = continue
+    command = "../terminate-spot-bid.sh ${self.id}"
+  }
 }
 
 
