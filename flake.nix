@@ -51,7 +51,7 @@
           pkgs.jq
           pkgs.openssh
           pkgs.vault
-          (pkgs.terraform_1.withPlugins (p: [ p.equinix ]))
+          (pkgs.terraform_1.withPlugins (p: [ p.equinix p.metal ]))
         ];
       };
 
