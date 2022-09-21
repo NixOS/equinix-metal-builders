@@ -37,6 +37,20 @@
         }).config.system.build.toplevel;
     in
     rec {
+      devShell.x86_64-linux = let pkgs = nixpkgs.legacyPackages.x86_64-linux; in pkgs.mkShell {
+        buildInputs = [
+          pkgs.awscli
+          pkgs.bashInteractive
+          pkgs.curl
+          pkgs.gawk
+          pkgs.gnused
+          pkgs.jq
+          pkgs.openssh
+          pkgs.vault
+          (pkgs.terraform_1.withPlugins (p: [ p.metal ]))
+        ];
+      };
+
       nixosConfigurations.c3-medium-x86 = mkNixOS "x86_64-linux" {
         imports = [ ./instances/c3.medium.x86.nix ];
 
