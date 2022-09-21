@@ -61,8 +61,6 @@ current_jobs() {
 
 id=$1
 host=$2
-sos=$3
-
 
 drain "${id}"
 echo "Draining builds ..."
