@@ -209,5 +209,17 @@ resource "metal_device" "reservation" {
       tags
     ]
   }
+
+  provisioner "local-exec" {
+    when = destroy
+    on_failure = continue
+    command = "../drain.sh ${self.device_id}"
+  }
+
+  provisioner "local-exec" {
+    when = destroy
+    on_failure = continue
+    command = "../terminate.sh ${self.id}"
+  }
 }
 
