@@ -32,7 +32,7 @@
           ];
         }).config.system.build.toplevel;
     in
-    {
+    rec {
       nixosConfigurations.c3-medium-x86 = mkNixOS "x86_64-linux" {
         imports = [ ./instances/c3.medium.x86.nix ];
 
@@ -56,5 +56,7 @@
           buildCores = 24;
         };
       };
+
+      checks = nixosConfigurations;
     };
 }
