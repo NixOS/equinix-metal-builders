@@ -40,15 +40,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1663723551,
-        "narHash": "sha256-HoPuxe0x37edyo/BHXQMRE3wHYvN3vCIp2yISdvWEpI=",
+        "lastModified": 1663726712,
+        "narHash": "sha256-gcO7XJiqk2tYn4pDAiEQNXY46+u8leuFAiHajmY3DOo=",
         "owner": "DeterminateSystems",
         "repo": "nix-netboot-serve",
-        "rev": "90b0776a1b71107b78f9ea317df2c99c065c6e9b",
+        "rev": "0c7ababa3d6f5d8c412cda1e5d7c65b048c85e89",
         "type": "github"
       },
       "original": {
         "owner": "DeterminateSystems",
+        "ref": "grahamc-patch-1",
         "repo": "nix-netboot-serve",
         "type": "github"
       }
