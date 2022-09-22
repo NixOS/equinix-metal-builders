@@ -39,6 +39,11 @@ variable "facilities" {
   ]
 }
 
+variables "price" {
+  type = number
+  default = 4 # randomly chosen
+}
+
 variable "tags" {
   type    = list(string)
   default = ["terraform-packet-nix-builder"]
@@ -50,68 +55,57 @@ variable "project_id" {
 
 variable "bids" {
   type = list(object({
-    price = number
     plan  = string
     name  = string # leave as an empty string to use the plan
     url   = string
   }))
   default = [
     {
-      price = 2.0
       plan  = "c3.large.arm"
       name  = "c3.large.arm--big-parallel"
       url   = "https://netboot.gsc.io/hydra-aarch64-linux/netboot.ipxe"
     },
     {
-      price = 1.9
       plan  = "c3.large.arm"
       name  = "c3.large.arm--big-parallel"
       url   = "https://netboot.gsc.io/hydra-aarch64-linux/netboot.ipxe"
     },
     {
-      price = 1.8
       plan  = "c3.large.arm"
       name  = "c3.large.arm"
       url   = "https://netboot.gsc.io/hydra-aarch64-linux/netboot.ipxe"
     },
     {
-      price = 2.0
       plan  = "c3.medium.x86"
       name  = "c3.medium.x86--big-parallel"
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
     },
     {
-      price = 1.99
       plan  = "c3.medium.x86"
       name  = "c3.medium.x86--big-parallel"
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
     },
     {
-      price = 1.98
       plan  = "c3.medium.x86"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
     },
     {
-      price = 1.97
       plan  = "c3.medium.x86"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
     },
     {
-      price = 1.96
       plan  = "c3.medium.x86"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
     },
     {
-      price = 1.95
       plan  = "c3.medium.x86"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
     },
     {
-      price = 1.97
       plan  = "m3.large.x86"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
@@ -126,7 +120,7 @@ locals {
 resource "equinix_metal_spot_market_request" "request" {
   for_each      = local.named_bids
   project_id    = var.project_id
-  max_bid_price = each.value.price
+  max_bid_price = var.price
   facilities  = var.facilities
   devices_min = 1
   devices_max = 1
