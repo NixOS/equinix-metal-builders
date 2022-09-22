@@ -18,6 +18,27 @@ terraform {
   }
 }
 
+variable "facilities" {
+  type = list(string)
+  # curl --header "X-Auth-Token: $PACKET_AUTH_TOKEN" https://api.equinix.com/metal/v1/facilities \
+  # | jq -r '.facilities | map(select(.metro.code | inside("am", "da", "fr", "la", "ny", "se", "sv", "dc")) | .code) | sort'
+  default = [
+    "am6",
+    "da11",
+    "da6",
+    "dc10",
+    "dc13",
+    "fr2",
+    "fr8",
+    "la4",
+    "ny5",
+    "ny7",
+    "se4",
+    "sv15",
+    "sv16"
+  ]
+}
+
 variable "tags" {
   type    = list(string)
   default = ["terraform-packet-nix-builder"]
@@ -31,7 +52,6 @@ variable "bids" {
   type = list(object({
     price = number
     plan  = string
-    metro = string
     name  = string # leave as an empty string to use the plan
     url   = string
   }))
@@ -39,70 +59,60 @@ variable "bids" {
     {
       price = 2.0
       plan  = "c3.large.arm"
-      metro = "DC"
       name  = "c3.large.arm--big-parallel"
       url   = "https://netboot.gsc.io/hydra-aarch64-linux/netboot.ipxe"
     },
     {
       price = 1.9
       plan  = "c3.large.arm"
-      metro = "DC"
       name  = "c3.large.arm--big-parallel"
       url   = "https://netboot.gsc.io/hydra-aarch64-linux/netboot.ipxe"
     },
     {
       price = 1.8
       plan  = "c3.large.arm"
-      metro = "DC"
       name  = "c3.large.arm"
       url   = "https://netboot.gsc.io/hydra-aarch64-linux/netboot.ipxe"
     },
     {
       price = 2.0
       plan  = "c3.medium.x86"
-      metro = "AM"
       name  = "c3.medium.x86--big-parallel"
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
     },
     {
       price = 1.99
       plan  = "c3.medium.x86"
-      metro = "AM"
       name  = "c3.medium.x86--big-parallel"
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
     },
     {
       price = 1.98
       plan  = "c3.medium.x86"
-      metro = "AM"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
     },
     {
       price = 1.97
       plan  = "c3.medium.x86"
-      metro = "NY"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
     },
     {
       price = 1.96
       plan  = "c3.medium.x86"
-      metro = "NY"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
     },
     {
       price = 1.95
       plan  = "c3.medium.x86"
-      metro = "AM"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
     },
     {
       price = 1.97
       plan  = "m3.large.x86"
-      metro = "DA"
       name  = ""
       url   = "https://netboot.gsc.io/hydra-x86_64-linux/netboot.ipxe"
     },
@@ -117,12 +127,10 @@ resource "equinix_metal_spot_market_request" "request" {
   for_each      = local.named_bids
   project_id    = var.project_id
   max_bid_price = each.value.price
-  # facilities    = [ "sjc1", "dfw2", "ewr1" ] # todo: add nrt1 and ams1; their spot markets were churning in 2021-09-03
-  # metros         = [ "DC", "DA", "SV", "SP", "AM", "FR", "SG", "SV" ]
-  metro = each.value.metro
-  # facilities  = ["ewr1"]
+  facilities  = var.facilities
   devices_min = 1
   devices_max = 1
+  wait_for_devices = true
 
   instance_parameters {
     hostname         = each.value.name == "" ? each.value.plan : each.value.name
@@ -146,5 +154,13 @@ resource "equinix_metal_spot_market_request" "request" {
     when = destroy
     on_failure = continue
     command = "../terminate-spot-bid.sh ${self.id}"
+  }
+
+  lifecycle {
+    ignore_changes = [
+      metro,
+      facilities,
+      max_bid_price,
+    ]
   }
 }
