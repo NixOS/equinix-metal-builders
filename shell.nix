@@ -11,6 +11,6 @@ pkgs.mkShell {
     pkgs.jq
     pkgs.openssh
     pkgs.vault
-    (pkgs.terraform_1.withPlugins (p: [ p.metal p.equinix ]))
+    (pkgs.terraform_1.withPlugins (p: [ p.metal p.equinix p.http ]))
   ];
 }
