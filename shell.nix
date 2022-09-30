@@ -1,16 +1,9 @@
-let
-  pkgs = import (builtins.fetchTarball "channel:nixos-unstable-small") { };
-in
-pkgs.mkShell {
-  buildInputs = [
-    pkgs.awscli
-    pkgs.bashInteractive
-    pkgs.curl
-    pkgs.gawk
-    pkgs.gnused
-    pkgs.jq
-    pkgs.openssh
-    pkgs.vault
-    (pkgs.terraform_1.withPlugins (p: [ p.metal p.equinix ]))
-  ];
-}
+(import
+  (
+    let lock = builtins.fromJSON (builtins.readFile ./flake.lock); in
+    fetchTarball {
+      url = "https://github.com/edolstra/flake-compat/archive/${lock.nodes.flake-compat.locked.rev}.tar.gz";
+      sha256 = lock.nodes.flake-compat.locked.narHash;
+    }
+  )
+  { src = ./.; }

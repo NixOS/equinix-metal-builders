@@ -6,18 +6,15 @@ let
   about = pkgs.writeText "about.json" (builtins.toJSON {
     features = config.nix.features;
     system_types = config.nix.systemTypes;
-    max_jobs = config.nix.maxJobs;
+    max_jobs = config.nix.settings.max-jobs;
   });
-in {
+in
+{
   options = {
     nix = {
       gbFree = mkOption {
         description = "Number of GB to keep free.";
         type = types.int;
-      };
-
-      makeAbout = mkEnableOption {
-        type = types.bool;
       };
 
       systemTypes = mkOption {
@@ -32,16 +29,11 @@ in {
     };
   };
 
-  config = mkMerge [
-    {
-    
-      systemd.services.nix-daemon.serviceConfig.LimitNOFILE = lib.mkForce 1048576;
-      nix.gc.options = ''--max-freed "$((${toString config.nix.gbFree} * 1024**3 - 1024 * $(df -P -k /nix/store | tail -n 1 | ${pkgs.gawk}/bin/awk '{ print $4 }')))"'';
-    }
-    (mkIf config.nix.makeAbout {
-      system.extraSystemBuilderCmds = ''
-        cp ${about} $out/about.json
-      '';
-    })
-  ];
+  config = {
+    systemd.services.nix-daemon.serviceConfig.LimitNOFILE = lib.mkForce 1048576;
+    nix.gc.options = ''--max-freed "$((${toString config.nix.gbFree} * 1024**3 - 1024 * $(df -P -k /nix/store | tail -n 1 | ${pkgs.gawk}/bin/awk '{ print $4 }')))"'';
+    system.extraSystemBuilderCmds = ''
+      cp ${about} $out/about.json
+    '';
+  };
 }
