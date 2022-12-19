@@ -2,7 +2,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable-small";
     nix-netboot-serve = {
-      url = "github:DeterminateSystems/nix-netboot-serve/grahamc-patch-1";
+      url = "github:DeterminateSystems/nix-netboot-serve";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-compat = {
