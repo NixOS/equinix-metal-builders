@@ -11,7 +11,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, nix-netboot-serve, flake-utils, flake-compat }:
+  outputs = { self, nixpkgs, nix-netboot-serve, flake-compat }:
     let
       mkNixOS = system: module:
         (nixpkgs.lib.nixosSystem {
