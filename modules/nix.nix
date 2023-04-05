@@ -30,7 +30,7 @@ in
   };
 
   config = {
-    nix.package = pkgs.nixVersions.nix_2_11;
+    nix.package = pkgs.nixVersions.nix_2_13;
     systemd.services.nix-daemon.serviceConfig.LimitNOFILE = lib.mkForce 1048576;
     nix.gc.options = ''--max-freed "$((${toString config.nix.gbFree} * 1024**3 - 1024 * $(df -P -k /nix/store | tail -n 1 | ${pkgs.gawk}/bin/awk '{ print $4 }')))"'';
     system.extraSystemBuilderCmds = ''
