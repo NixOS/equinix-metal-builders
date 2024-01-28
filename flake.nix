@@ -21,7 +21,7 @@
             nix-netboot-serve.nixosModules.no-filesystem
             nix-netboot-serve.nixosModules.register-nix-store
             nix-netboot-serve.nixosModules.swap-to-disk
-            nix-netboot-serve.nixosModules.tmpfs-root
+            ./modules/tmpfs-root.nix
 
 
             module

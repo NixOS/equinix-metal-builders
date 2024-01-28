@@ -1,0 +1,150 @@
+From b01222f1a1c6da4106f725366c54b20b8e8c6808 Mon Sep 17 00:00:00 2001
+From: Ignat Korchagin <ignat@cloudflare.com>
+Date: Tue, 31 Mar 2020 13:40:17 +0100
+Subject: [PATCH] mnt: add support for non-rootfs initramfs
+
+The main need for this is to support container runtimes on stateless Linux
+system (pivot_root system call from initramfs).
+
+Normally, the task of initramfs is to mount and switch to a "real" root
+filesystem. However, on stateless systems (booting over the network) it is
+just convenient to have your "real" filesystem as initramfs from the start.
+
+This, however, breaks different container runtimes, because they usually
+use pivot_root system call after creating their mount namespace. But
+pivot_root does not work from initramfs, because initramfs runs from
+rootfs, which is the root of the mount tree and can't be unmounted.
+
+One workaround is to do:
+
+  mount --bind / /
+
+However, that defeats one of the purposes of using pivot_root in the
+cloned containers: get rid of host root filesystem, should the code somehow
+escapes the chroot.
+
+There is a way to solve this problem from userspace, but it is much more
+cumbersome:
+  * either have to create a multilayered archive for initramfs, where the
+    outer layer creates a tmpfs filesystem and unpacks the inner layer,
+    switches root and does not forget to properly cleanup the old rootfs
+  * or we need to use keepinitrd kernel cmdline option, unpack initramfs
+    to rootfs, run a script to create our target tmpfs root, unpack the
+    same initramfs there, switch root to it and again properly cleanup
+    the old root, thus unpacking the same archive twice and also wasting
+    memory, because the kernel stores compressed initramfs image
+    indefinitely.
+
+With this change we can ask the kernel (by specifying nonroot_initramfs
+kernel cmdline option) to create a "leaf" tmpfs mount for us and switch
+root to it before the initramfs handling code, so initramfs gets unpacked
+directly into the "leaf" tmpfs with rootfs being empty and no need to
+clean up anything.
+
+This also bring the behaviour in line with the older style initrd, where
+the initrd is located on some leaf filesystem in the mount tree and rootfs
+remaining empty.
+
+Co-developed-by: Graham Christensen <graham@determinate.systems>
+Signed-off-by: Graham Christensen <graham@determinate.systems>
+Tested-by: Graham Christensen <graham@determinate.systems>
+Signed-off-by: Ignat Korchagin <ignat@cloudflare.com>
+---
+ .../admin-guide/kernel-parameters.txt         |  7 +++
+ fs/namespace.c                                | 48 +++++++++++++++++++
+ 2 files changed, 55 insertions(+)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 4ad60e127e04..0c76cc7a4fc5 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3825,6 +3825,13 @@
+ 
+ 	nomodule	Disable module load
+ 
++	nonroot_initramfs
++			[KNL] Create an additional tmpfs filesystem under rootfs
++			and unpack initramfs there instead of the rootfs itself.
++			This is useful for stateless systems, which run directly
++			from initramfs, create mount namespaces and use
++			"pivot_root" system call.
++
+ 	nopat		[X86] Disable PAT (page attribute table extension of
+ 			pagetables) support.
+ 
+diff --git a/fs/namespace.c b/fs/namespace.c
+index e04a9e9e3f14..2f93940910aa 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -18,6 +18,7 @@
+ #include <linux/cred.h>
+ #include <linux/idr.h>
+ #include <linux/init.h>		/* init_rootfs */
++#include <linux/init_syscalls.h> /* init_chdir, init_chroot, init_mkdir */
+ #include <linux/fs_struct.h>	/* get_fs_root et.al. */
+ #include <linux/fsnotify.h>	/* fsnotify_vfsmount_delete */
+ #include <linux/file.h>
+@@ -4403,6 +4404,49 @@ static void __init init_mount_tree(void)
+ 	set_fs_root(current->fs, &root);
+ }
+ 
++#if IS_ENABLED(CONFIG_TMPFS)
++static int __initdata nonroot_initramfs;
++
++static int __init nonroot_initramfs_param(char *str)
++{
++	if (*str)
++		return 0;
++	nonroot_initramfs = 1;
++	return 1;
++}
++__setup("nonroot_initramfs", nonroot_initramfs_param);
++
++static void __init init_nonroot_initramfs(void)
++{
++	int err;
++
++	if (!nonroot_initramfs)
++		return;
++
++	err = init_mkdir("/root", 0700);
++	if (err < 0)
++		goto out;
++
++	err = init_mount("tmpfs", "/root", "tmpfs", 0, NULL);
++	if (err)
++		goto out;
++
++	err = init_chdir("/root");
++	if (err)
++		goto out;
++
++	err = init_mount(".", "/", NULL, MS_MOVE, NULL);
++	if (err)
++		goto out;
++
++	err = init_chroot(".");
++	if (!err)
++		return;
++out:
++	pr_warn("Failed to create a non-root filesystem for initramfs\n");
++}
++#endif /* IS_ENABLED(CONFIG_TMPFS) */
++
+ void __init mnt_init(void)
+ {
+ 	int err;
+@@ -4436,6 +4480,10 @@ void __init mnt_init(void)
+ 	shmem_init();
+ 	init_rootfs();
+ 	init_mount_tree();
++
++#if IS_ENABLED(CONFIG_TMPFS)
++	init_nonroot_initramfs();
++#endif
+ }
+ 
+ void put_mnt_ns(struct mnt_namespace *ns)
+-- 
+2.43.0
+
