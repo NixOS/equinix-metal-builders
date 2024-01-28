@@ -31,7 +31,7 @@
             ./modules/system.nix
 
             {
-              system.stateVersion = "22.11";
+              system.stateVersion = "24.05";
               nix = {
                 gbFree = 100;
                 features = [ "kvm" "nixos-test" ];
