@@ -17,9 +17,9 @@ in
 {
   security.sudo.wheelNeedsPassword = false;
   services = {
-    openssh = {
-      kbdInteractiveAuthentication = false;
-      passwordAuthentication = false;
+    openssh.settings = {
+      KbdInteractiveAuthentication = false;
+      PasswordAuthentication = false;
     };
   };
 

@@ -21,7 +21,7 @@
             nix-netboot-serve.nixosModules.no-filesystem
             nix-netboot-serve.nixosModules.register-nix-store
             nix-netboot-serve.nixosModules.swap-to-disk
-            nix-netboot-serve.nixosModules.tmpfs-root
+            ./modules/tmpfs-root.nix
 
 
             module
@@ -31,7 +31,7 @@
             ./modules/system.nix
 
             {
-              system.stateVersion = "22.11";
+              system.stateVersion = "24.05";
               nix = {
                 gbFree = 100;
                 features = [ "kvm" "nixos-test" ];
