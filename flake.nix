@@ -20,7 +20,7 @@
           modules = [
             nix-netboot-serve.nixosModules.no-filesystem
             nix-netboot-serve.nixosModules.register-nix-store
-            nix-netboot-serve.nixosModules.swap-to-disk
+            ./modules/swap-to-disk.nix
             ./modules/tmpfs-root.nix
 
 
