@@ -16,6 +16,8 @@
 # of your system's RAM will be required for holding filesystem data.
 { pkgs, ... }:
 {
+  boot.swraid.enable = true;
+
   systemd.services.add-disks-to-swap = {
     wantedBy = [ "multi-user.target" ];
     serviceConfig = {
