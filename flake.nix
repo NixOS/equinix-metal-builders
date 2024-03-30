@@ -41,7 +41,12 @@
         }).config.system.build.toplevel;
     in
     rec {
-      devShell.x86_64-linux = let pkgs = nixpkgs.legacyPackages.x86_64-linux; in pkgs.mkShell {
+      devShells.x86_64-linux.default = let
+        pkgs = import nixpkgs {
+          system = "x86_64-linux";
+          config.allowUnfree = true; # vault
+        };
+      in pkgs.mkShell {
         buildInputs = [
           pkgs.awscli
           pkgs.bashInteractive
