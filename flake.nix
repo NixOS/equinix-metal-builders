@@ -81,8 +81,8 @@
 
         nix = {
           systemTypes = [ "x86_64-linux" "i686-linux" ];
-          settings.max-jobs = 2;
-          settings.cores = 24;
+          settings.max-jobs = 32;
+          settings.cores = 2;
         };
       };
 
@@ -93,7 +93,7 @@
           features = [ "big-parallel" ];
           systemTypes = [ "x86_64-linux" "i686-linux" ];
           settings.max-jobs = 2;
-          settings.cores = 24;
+          settings.cores = 32;
         };
       };
 
