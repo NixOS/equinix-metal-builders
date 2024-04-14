@@ -30,9 +30,6 @@ in
 
       #### infra-core
 
-      # eelco
-      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDfNUQXdhu4tIC+oDtq12aKRw3mfHa1nP/sMRkE379bnByQWqgpr8cCsXaNsZIrM49Iv/cP2JxZT1S3K4kfp6ouvNN+rYubOrpHLt+NWhiI+1s5IpgZv21Ln1kANjo4jzKLTRfoGv1gWILTG1KSD8oTev1kE1p3GJph5pTVilzAW1uXNhkSpYVMIw6HwqPR4QN1UliD5FvAdz6FJ16E7/xhaVWdeEOcsYw2uRXBaY/rXkKtikscZ99wnOiCf6Gph2ahLkmZ/I3QmNq+xH+Xq6vpx6Kky0MKNm2zlh5tRDOd7Wd5N3sQpGAtHL4qGObq0N3VCtuJIL5eVRpZ5l5yNLsp"
-
       # delroth
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII3tjB4KYDok3KlWxdBp/yEmqhhmybd+w0VO4xUwLKKV"
 
