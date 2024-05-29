@@ -5,13 +5,9 @@
       url = "github:DeterminateSystems/nix-netboot-serve";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    flake-compat = {
-      url = "github:edolstra/flake-compat";
-      flake = false;
-    };
   };
 
-  outputs = { self, nixpkgs, nix-netboot-serve, flake-compat }:
+  outputs = { self, nixpkgs, nix-netboot-serve }:
     let
       mkNixOS = system: module:
         (nixpkgs.lib.nixosSystem {
