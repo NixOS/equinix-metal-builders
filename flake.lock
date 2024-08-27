@@ -26,11 +26,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1713371569,
-        "narHash": "sha256-YAk9ePZ2gCfW0BRiH0fXdgN689r6WdWT1nQkUm0DWAE=",
+        "lastModified": 1721830768,
+        "narHash": "sha256-VCEmUyS4amTlQsDH79gDks3Zx1cw8B0+HL7/MkPpSbQ=",
         "owner": "DeterminateSystems",
         "repo": "nix-netboot-serve",
-        "rev": "9eb0ae1b9162b351e16cf21b545999f130eaad8e",
+        "rev": "bab81b39988394061c4ef487a14846f1097804c4",
         "type": "github"
       },
       "original": {
@@ -57,11 +57,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1719824438,
-        "narHash": "sha256-pY0wosAgcr9W4vmGML0T3BVhQiGuKoozCbs2t+Je1zc=",
+        "lastModified": 1724740600,
+        "narHash": "sha256-JP6fFxQyeWd5GTJrlwItIJJtT2VuOiwIzb/QEMNICwI=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "7f993cdf26ccef564eabf31fdb40d140821e12bc",
+        "rev": "c32bd049ad54e6a8c1300164061a6e18de6781bc",
         "type": "github"
       },
       "original": {
