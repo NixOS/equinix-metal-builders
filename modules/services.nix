@@ -12,7 +12,13 @@
     };
   };
 
-  networking.firewall.allowedTCPPorts = [ config.services.prometheus.exporters.node.port ];
+  networking.firewall = {
+    allowedTCPPorts = [ config.services.prometheus.exporters.node.port ];
+
+    # too noisy, rotates kmsg too quickly
+    logRefusedConnections = false;
+  };
+
   services.prometheus.exporters.node = {
     enable = true;
     enabledCollectors = [ "systemd" ];
