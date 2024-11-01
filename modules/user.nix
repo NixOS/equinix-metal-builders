@@ -28,6 +28,15 @@ in
     "root"
   ];
 
+  security.pam.loginLimits = [
+    {
+      domain = "@nixbld";
+      type = "-"; # both soft and hard limit
+      item = "nofile";
+      value = "1048576";
+    }
+  ];
+
   users.users = {
     root.openssh.authorizedKeys.keys = [
       (authorizedNixStoreKey sshKeys.hydra-queue-runner-rhea)
