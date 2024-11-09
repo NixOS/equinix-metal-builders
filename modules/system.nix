@@ -28,7 +28,7 @@
 
     systemd.services.metadata-setup-ipv6 = {
       wantedBy = [ "multi-user.target" ];
-      path = with pkgs; [ iproute curl jq ];
+      path = with pkgs; [ iproute2 curl jq ];
       serviceConfig = {
         Type = "simple";
         Restart = "on-failure";
